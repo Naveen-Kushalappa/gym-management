@@ -1,0 +1,56 @@
+# Laravel specific
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+/.env
+/.env.*.backup
+
+# Laravel IDE Helper
+/_ide_helper.php
+/_ide_helper_models.php
+
+# Laravel Telescope
+/telescope
+
+# Laravel Mix
+/public/hot
+/public/mix-manifest.json
+/public/css/*.map
+/public/js/*.map
+
+# Composer
+composer.lock
+
+# NPM/Yarn
+yarn.lock
+package-lock.json
+
+# IDEs and editors
+/.idea
+/.vscode
+*.sublime-project
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+/storage/*.log
+/storage/logs/*.log
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/app/public
+
+# Temporary files
+*.swp
+*.bak
+*.tmp
+*.temp
+
+# Storage app files
+/storage/app/*
+!/storage/app/.gitignore
