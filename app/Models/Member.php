@@ -9,7 +9,7 @@ class Member extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'gender'];
+    protected $fillable = ['name', 'gender', 'is_active'];
 
     public function payments(){
         return $this->hasMany(Payment::class);

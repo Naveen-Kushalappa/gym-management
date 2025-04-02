@@ -3,6 +3,7 @@
  namespace App\Http\Controllers;
  use App\Models\Member;
  use Illuminate\Http\Request;
+ use Log;
 
  class MemberController extends Controller {
     public function index(){
@@ -37,13 +38,13 @@
         $request->validate([
             'name' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female',
-            'isActive' => 'required|in:1,0',
+            'isActive' => 'required|boolean',
         ]);
 
         $member->update([
             'name' => $request->name,
             'gender' => $request->gender,
-            'isActive' => $request->isActive,
+            'is_active' => $request->isActive,
         ]);
 
         return redirect()->route('members.index')->with('success', 'Member updated successfully');
