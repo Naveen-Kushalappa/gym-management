@@ -29,7 +29,7 @@
                     Payments
                 </th>
                  <th> 
-                    Is Active
+                    Is active
                 </th>
                 <th> 
                     Actions
@@ -37,7 +37,6 @@
             </tr>
         </thead>
         <tbody>
-
             @foreach ($members as $member)
                 <tr>
                 <td>{{ $member->name }}</td>    
