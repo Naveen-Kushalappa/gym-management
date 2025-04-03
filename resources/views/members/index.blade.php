@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    @if($members)
+    @if(count($members) > 1)
         <table class="table table-striped table-hover">
         <thead>
             <tr>
