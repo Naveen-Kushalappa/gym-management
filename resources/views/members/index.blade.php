@@ -14,7 +14,8 @@
         </div>
     @endif
 
-    <table class="table table-striped table-hover">
+    @if($members)
+        <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th> 
@@ -62,6 +63,9 @@
                 </tr>
             @endforeach
         </tbody>
-    </table>
+        </table>
+    @else
+        <h3>No members added</h3>
+    @endif
 </div>
 @endsection
