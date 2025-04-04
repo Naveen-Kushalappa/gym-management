@@ -24,7 +24,7 @@
         ]);
         Member::create($request->all());
 
-        return redirect()->route('members.index')->with('success', 'Member added successfully');
+        return redirect()->route('members.index')->with('success', 'Member added successfully!!!');
     }
 
     public function show(Member $member){
@@ -47,7 +47,7 @@
             'is_active' => $request->isActive,
         ]);
 
-        return redirect()->route('members.index')->with('success', 'Member updated successfully');
+        return redirect()->route('members.index')->with('success', 'Member updated successfully!!!');
     }
 
     public function destroy(Member $member){
