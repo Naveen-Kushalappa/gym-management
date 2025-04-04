@@ -1,23 +1,36 @@
+# Use official PHP-FPM image
 FROM php:8.2-fpm
 
-# Set working directory in the container
-WORKDIR /var/www
+# Set working directory
+WORKDIR /var/www/html
 
-# Install system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git \
+# Install required system dependencies
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    zip \
+    unzip \
+    curl \
+    git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install gd pdo pdo_mysql
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy Laravel project files into the container
-COPY . .
+# Copy Laravel files
+COPY . /var/www/html
 
-# Set necessary permissions for the `storage` and `bootstrap/cache` directories
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# Set correct permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 9000 and start PHP-FPM
+# Install Laravel dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Expose port 9000 for PHP-FPM
 EXPOSE 9000
+
+# Start PHP-FPM server
 CMD ["php-fpm"]
