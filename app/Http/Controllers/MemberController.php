@@ -1,9 +1,8 @@
 <?php
- 
  namespace App\Http\Controllers;
  use App\Models\Member;
  use Illuminate\Http\Request;
- use Log;
+ use Illuminate\Support\Facades\Log;
 
  class MemberController extends Controller {
     public function index(){
@@ -22,7 +21,7 @@
             'name' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female',
         ]);
-        Member::create($request->all());
+        $member = Member::create($request->all());
 
         return redirect()->route('members.index')->with('success', 'Member added successfully!!!');
     }
