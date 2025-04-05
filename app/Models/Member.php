@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 
 class Member extends Model
 {
@@ -16,7 +17,19 @@ class Member extends Model
     }
 
     protected $attributes = [
-        'is_active' => true    
+        'is_active' => true
     ];
+
+    public function getHasPaidThisMonthAttribute()
+    {
+        $currentMonth = intval(Carbon::now()->format('m'));
+        $currentYear = Carbon::now()->format('Y');
+
+        return $this->payments->contains(function ($payment) use ($currentMonth, $currentYear) {
+            return $payment->month == $currentMonth && $payment->year == $currentYear;
+        });
+    }
+
+    protected $appends = ['has_paid_this_month'];
 
 }

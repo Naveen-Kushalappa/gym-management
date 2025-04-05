@@ -41,8 +41,8 @@
                 <tr>
                 <td>{{ $member->name }}</td>
                 <td>{{ $member->gender }}</td>
-                @if($member->payments->count() > 0)
-                    <td>{{ $member->payments->first()->status}}</td>
+                @if($member->has_paid_this_month)
+                    <td>Paid</td>
                 @else
                     <td>UnPaid</td>
                 @endif

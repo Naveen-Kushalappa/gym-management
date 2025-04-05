@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h2>Member Details</h2>
-    
+
     <table class="table table-striped">
         <tr>
             <th>Name:</th>
@@ -29,7 +29,7 @@
         <tbody>
             @foreach ($member->payments as $payment)
                 <tr>
-                    <td>               
+                    <td>
                          {{ date('F', mktime(0, 0, 0, $payment->month, 1)) }}
                     </td>
                     <td>{{ $payment->year }}</td>
@@ -39,8 +39,22 @@
         </tbody>
     </table>
 
-    @else
+    @endif
     <h4>Add Payment</h4>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <form action="{{ route('payments.store', $member->id) }}" method="POST">
         @csrf
         <div class="mb-3">
@@ -52,7 +66,7 @@
                 {{ date('F', mktime(0, 0, 0, $month, 1)) }}
             </option>
            @endforeach
-        </select>  
+        </select>
        </div>
         <div class="mb-3">
             <label class="form-label">Year</label>
@@ -64,18 +78,9 @@
                 </option>
                 @endforeach
         </select>
-            <!-- <input type="number" name="year" class="form-control" min="2000" required> -->
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Status</label>
-            <select name="status" class="form-control">
-                <option value="Paid">Paid</option>
-                <option value="Unpaid">Unpaid</option>
-            </select>
         </div>
         <button type="submit" class="btn btn-success">Add Payment</button>
     </form>
-    @endif
 
     <br>
     <a href="{{ route('members.index') }}" class="btn btn-secondary">Back to Members</a>
