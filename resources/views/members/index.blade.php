@@ -1,4 +1,4 @@
-@extends('layouts.app');
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -18,20 +18,20 @@
         <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th> 
+                <th>
                     Name
                 </th>
-            
-                <th> 
+
+                <th>
                     Gender
                 </th>
-                <th> 
+                <th>
                     Payments
                 </th>
-                 <th> 
+                 <th>
                     Is active
                 </th>
-                <th> 
+                <th>
                     Actions
                 </th>
             </tr>
@@ -39,14 +39,14 @@
         <tbody>
             @foreach ($members as $member)
                 <tr>
-                <td>{{ $member->name }}</td>    
-                <td>{{ $member->gender }}</td>    
+                <td>{{ $member->name }}</td>
+                <td>{{ $member->gender }}</td>
                 @if($member->payments->count() > 0)
                     <td>{{ $member->payments->first()->status}}</td>
                 @else
                     <td>UnPaid</td>
                 @endif
-                <td>{{ $member->is_active ? "Active" : "In active" }}</td>    
+                <td>{{ $member->is_active ? "Active" : "In active" }}</td>
 
                 <td>
                     <a href="{{ route('members.show', $member->id) }}" class="btn btn-info btn-sm">View</a>
@@ -58,7 +58,7 @@
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
 
                     </form>
-                </td>    
+                </td>
                 </tr>
             @endforeach
         </tbody>
