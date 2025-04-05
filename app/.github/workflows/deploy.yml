@@ -16,5 +16,4 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            /var/www/deploy.sh
+          script: /var/www/deploy.sh

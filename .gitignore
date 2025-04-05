@@ -54,3 +54,6 @@ Thumbs.db
 # Storage app files
 /storage/app/*
 !/storage/app/.gitignore
+
+important-commands.txt
+
