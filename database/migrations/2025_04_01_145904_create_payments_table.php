@@ -12,9 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->uuid('member_id')->nullable();
+            $table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');
 
-            $table->foreignId('member_id')->constrained()->onDelete('cascade');
+            $table->uuid('org_id')->nullable();
+            $table->foreign('org_id')->references('id')->on('organizations')->onDelete('cascade');
+
             $table->integer('month');
             $table->integer('year');
             $table->enum('status', ['Paid', 'Unpaid'])->default('Unpaid');
