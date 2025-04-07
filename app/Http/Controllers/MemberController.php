@@ -5,9 +5,16 @@
  use Illuminate\Support\Facades\Log;
 
  class MemberController extends Controller {
-    public function index(){
+     public function index(Request $request)
+     {
+         $search = $request->input('search');
+         $members = Member::query()
+             ->when($search, function ($query, $search) {
+                 $query->where('name', 'like', "%{$search}%");
+             })
+             ->orderBy('created_at', 'desc')
+             ->get();
 
-        $members = Member::all();
         return view('members.index', compact('members'));
     }
 

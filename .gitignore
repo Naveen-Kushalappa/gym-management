@@ -18,6 +18,7 @@
 /public/mix-manifest.json
 /public/css/*.map
 /public/js/*.map
+/public/build
 
 # Composer
 composer.lock
@@ -56,4 +57,8 @@ Thumbs.db
 !/storage/app/.gitignore
 
 important-commands.txt
+
+.phpunit.result.cach
+
+
 
