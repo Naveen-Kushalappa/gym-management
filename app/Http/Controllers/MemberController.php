@@ -2,13 +2,17 @@
  namespace App\Http\Controllers;
  use App\Models\Member;
  use Illuminate\Http\Request;
- use Illuminate\Support\Facades\Log;
+ use Illuminate\Support\Facades\Hash;
 
  class MemberController extends Controller {
-    public function index(){
 
-        $members = Member::all();
-        return view('members.index', compact('members'));
+    public function index(Request $request){
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Logged out'], 403);
+        }
+        return Member::where('org_id', $user->org_id)->get();
     }
 
 
@@ -17,13 +21,26 @@
     }
 
     public function store(Request  $request){
+        $user = $request->user();
+
+        if ($user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
         $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
             'gender' => 'required|in:Male,Female',
         ]);
-        $member = Member::create($request->all());
 
-        return redirect()->route('members.index')->with('success', 'Member added successfully!!!');
+        $member = Member::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'member',
+            'organization_id' => $user->organization_id,
+        ]);
+
+        return response()->json($member, 201);
     }
 
     public function show(Member $member){
@@ -49,10 +66,20 @@
         return redirect()->route('members.index')->with('success', 'Member updated successfully!!!');
     }
 
-    public function destroy(Member $member){
-        $member->delete();
+     public function destroy(Request $request, $id)
+     {
+         $user = $request->user();
 
-        return redirect()->route('members.index')->with('success', 'Deleted member');
-    }
+         if ($user->role !== 'admin') {
+             return response()->json(['message' => 'Unauthorized'], 403);
+         }
 
+         $member = Member::where('organization_id', $user->organization_id)
+             ->where('role', 'member')
+             ->findOrFail($id);
+
+         $member->delete();
+
+         return response()->json(['message' => 'Member deleted']);
+     }
  }
