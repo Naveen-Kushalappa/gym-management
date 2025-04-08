@@ -7,10 +7,11 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return redirect()->route('members.index');
+    return redirect()->route('dashboard');
 });
 
-Route::resource('members', MemberController::class);
+Route::resource('members', MemberController::class)->middleware(['auth']);
+
 Route::post('payments/{member}', [PaymentController::class, 'store'])->name('payments.store');
 
 Route::get('/dashboard', function () {

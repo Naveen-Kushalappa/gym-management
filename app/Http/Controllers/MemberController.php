@@ -3,6 +3,9 @@
  use App\Models\Member;
  use Illuminate\Http\Request;
  use Illuminate\Support\Facades\Hash;
+ use Illuminate\Support\Facades\Log;
+ use Illuminate\Support\Facades\Redirect;
+ use Inertia\Inertia;
 
  class MemberController extends Controller {
 
@@ -12,12 +15,16 @@
         if (!$user) {
             return response()->json(['message' => 'Logged out'], 403);
         }
-        return Member::where('org_id', $user->org_id)->get();
+        $members = Member::where('org_id', $user->org_id)->get();
+
+        return Inertia::render('Member/Index', [
+            'members' => $members
+        ]);
     }
 
 
     public function create(){
-        return view('members.create');
+        return Inertia::render('Member/Create');
     }
 
     public function store(Request  $request){
@@ -28,19 +35,24 @@
         }
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:members',
             'gender' => 'required|in:Male,Female',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         $member = Member::create([
             'name' => $request->name,
             'email' => $request->email,
+            'gender' => $request->gender,
             'password' => Hash::make($request->password),
             'role' => 'member',
-            'organization_id' => $user->organization_id,
+            'org_id' => $user->org_id,
         ]);
 
-        return response()->json($member, 201);
+        Log::info($member);
+
+//        return Inertia::render('Member/Index');
+        return Redirect::route('members.index')->with('success', 'Member created successfully.');
     }
 
     public function show(Member $member){
@@ -74,7 +86,7 @@
              return response()->json(['message' => 'Unauthorized'], 403);
          }
 
-         $member = Member::where('organization_id', $user->organization_id)
+         $member = Member::where('org_id', $user->org_id)
              ->where('role', 'member')
              ->findOrFail($id);
 

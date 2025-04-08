@@ -28,7 +28,6 @@ class Member extends Authenticable
     }
 
     protected $fillable = ['name', 'gender', 'is_active', 'org_id', 'role',
-        'name',
         'email',
         'password'
     ];
