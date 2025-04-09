@@ -19,9 +19,6 @@
 /public/css/*.map
 /public/js/*.map
 
-# Composer
-composer.lock
-
 # NPM/Yarn
 yarn.lock
 
