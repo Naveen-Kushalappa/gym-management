@@ -24,7 +24,6 @@ composer.lock
 
 # NPM/Yarn
 yarn.lock
-package-lock.json
 
 # IDEs and editors
 /.idea
