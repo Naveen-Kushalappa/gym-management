@@ -15,7 +15,7 @@
         if (!$user) {
             return response()->json(['message' => 'Logged out'], 403);
         }
-        $members = Member::where('org_id', $user->org_id)->get();
+        $members = Member::where('org_id', $user->org_id)->where('role', 'member')->get();
 
         return Inertia::render('Member/Index', [
             'members' => $members
