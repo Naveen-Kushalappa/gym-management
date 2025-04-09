@@ -1,0 +1,1 @@
+import{P as n,j as r}from"./app-BQbBlWMd.js";function u(){const{post:t}=n(),o=e=>{e.preventDefault(),t("/logout")};return r.jsx("button",{onClick:o,className:"text-red-600 hover:underline",children:"Logout"})}export{u as default};
