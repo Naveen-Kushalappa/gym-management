@@ -7,7 +7,7 @@ export default function Create() {
         email: '',
         password: '',
         password_confirmation: '',
-        gender: '',
+        gender: 'Male',
     });
 
     const handleSubmit = (e) => {

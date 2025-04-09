@@ -91,7 +91,6 @@
              ->findOrFail($id);
 
          $member->delete();
-
-         return response()->json(['message' => 'Member deleted']);
+         return Redirect::back()->with(['message' => 'Member deleted']);
      }
  }
