@@ -59,5 +59,6 @@ important-commands.txt
 
 .phpstorm.meta.php
 
+/public/build/
 .phpunit.result.cache
 
