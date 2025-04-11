@@ -22,6 +22,7 @@
         "vite": "6.0.11"
     },
     "dependencies": {
-        "@inertiajs/inertia": "0.11.1"
+        "@inertiajs/inertia": "0.11.1",
+        "moment": "^2.30.1"
     }
 }

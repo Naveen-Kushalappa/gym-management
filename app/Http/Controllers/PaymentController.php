@@ -60,4 +60,34 @@
         return redirect()->route('members.index')->with('success', 'Payment recorded');
     }
 
+    public function index(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Logged out'], 403);
+        }
+
+        $query = Payment::with('member');
+
+        //todo: Add search
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('comments', 'like', '%' . $search . '%')
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+//        dd($query->get());
+
+        $payments = $query->paginate(15)->withQueryString();
+//        dd($payments);
+
+        return Inertia::render('Payment/Index', [
+            'payments' => $payments,
+            'filters' => $request->only('search')
+        ]);
+    }
+
  }

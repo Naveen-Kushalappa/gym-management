@@ -9,9 +9,13 @@ export default function Navbar({ member }) {
                 <div className="flex gap-6">
                     <Link href="/dashboard" className="text-gray-800 hover:text-blue-600 font-semibold">Dashboard</Link>
                     {member.role === 'admin' && (
-                        <Link href="/members" className="text-gray-700 hover:text-blue-600 font-semibold">
+                        <>                        <Link href="/members" className="text-gray-700 hover:text-blue-600 font-semibold">
                             Members
                         </Link>
+                        <Link href="/payments" className="text-gray-700 hover:text-blue-600 font-semibold">
+                            Payments
+                        </Link>
+                        </>
                     )}
                 </div>
                 <div className="flex gap-6">

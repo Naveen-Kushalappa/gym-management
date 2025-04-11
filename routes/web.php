@@ -21,4 +21,6 @@ Route::get('/addPayment', [PaymentController::class, 'create'])->middleware(['au
 
 Route::post('/addPayment', [PaymentController::class, 'store'])->middleware(['auth'])->name('store-payment');
 
+Route::get('/payments', [PaymentController::class, 'index'])->middleware(['auth'])->name('payments');
+
 require __DIR__.'/auth.php';
