@@ -29,35 +29,39 @@ export default function Index({ members, filters }) {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
                     <h1 className="text-2xl font-bold">Manage Members</h1>
 
-                    <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
+                    <form
+                        onSubmit={handleSearch}
+                        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto"
+                    >
                         <input
                             type="text"
                             name="search"
                             value={data.search}
                             onChange={(e) => setData('search', e.target.value)}
                             placeholder="Search by name/email"
-                            className="border px-3 py-2 rounded w-full max-w-sm"
+                            className="border px-3 py-2 rounded w-full sm:w-64"
                         />
                         <button
                             type="submit"
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
                         >
                             Search
                         </button>
                     </form>
+
                     <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                    <Link
-                        href={route('members.create')}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center"
-                    >
-                        Add Member
-                    </Link>
-                    <Link
-                        href={route('add-payment')}
-                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
-                    >
-                        Add payment
-                    </Link>
+                        <Link
+                            href={route('members.create')}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center"
+                        >
+                            Add Member
+                        </Link>
+                        <Link
+                            href={route('add-payment')}
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
+                        >
+                            Add Payment
+                        </Link>
                     </div>
                 </div>
 
@@ -74,35 +78,35 @@ export default function Index({ members, filters }) {
                     {members.data.map((member) => (
                         <tr key={member.id}>
                             <td className="p-2 border">
-                               <div className="flex justify-center items-center">{member.name}</div>
+                                <div className="flex justify-center items-center">{member.name}</div>
                             </td>
                             <td className="p-2 border">
-                               <div className="flex justify-center items-center">
-                                {member.has_paid_this_month ?
-                                    <button className="bg-green-500 text-white px-4 py-2 rounded">Paid</button> :
-                                    <button className="bg-red-600 text-white px-4 py-2 rounded">UnPaid</button>
-                                }
-                               </div>
+                                <div className="flex justify-center items-center">
+                                    {member.has_paid_this_month ?
+                                        <button className="bg-green-500 text-white px-4 py-2 rounded">Paid</button> :
+                                        <button className="bg-red-600 text-white px-4 py-2 rounded">UnPaid</button>
+                                    }
+                                </div>
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">{member.gender}</div>
                             </td>
                             <td className="p-2 border space-x-2">
-                                                    <div className="flex justify-center items-center space-x-2">
+                                <div className="flex justify-center items-center space-x-2">
 
-                                <Link
-                                    href={route('members.edit', member.id)}
-                                    className="text-blue-600 hover:underline"
-                                >
-                                    Edit
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(member.id)}
-                                    className="text-red-600 hover:underline"
-                                >
-                                    Delete
-                                </button>
-                                                    </div>
+                                    <Link
+                                        href={route('members.edit', member.id)}
+                                        className="text-blue-600 hover:underline"
+                                    >
+                                        Edit
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(member.id)}
+                                        className="text-red-600 hover:underline"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}
