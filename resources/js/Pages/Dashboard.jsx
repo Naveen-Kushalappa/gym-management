@@ -1,6 +1,6 @@
 import React from 'react';
 import {Head, Link} from '@inertiajs/react';
-import Logout from '../Pages/Auth/Logout.jsx';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 export default function Dashboard({ member, activeMemberCount }) {
     return (
@@ -13,7 +13,7 @@ export default function Dashboard({ member, activeMemberCount }) {
                     <h1 className="flex items-center text-2xl font-bold mb-4">
                         Welcome, {member.name}!
                     </h1>
-                    <Logout />
+                        <p className="text-lg mb-2">You are logged in as <strong>Admin</strong>.</p>
                     </div>
 
                     {member.role === 'admin' ? (
@@ -30,7 +30,6 @@ export default function Dashboard({ member, activeMemberCount }) {
 const AdminDashboard = ({ member, activeMemberCount }) => {
     return (
         <div>
-            <p className="text-lg mb-2">You are logged in as <strong>Admin</strong>.</p>
             <p className="text-lg mb-2">Total {activeMemberCount} members are active in <strong>{member.organization.name}</strong>.</p>
             <ul className="list-disc list-inside">
                 <li><Link
@@ -58,3 +57,5 @@ const MemberDashboard = () => {
         </div>
     );
 }
+
+Dashboard.layout = (page) => <AuthenticatedLayout children={page} />;

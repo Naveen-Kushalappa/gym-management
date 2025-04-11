@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm, Head, Link } from '@inertiajs/react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 export default function Edit({ member }) {
     const { data, setData, put, processing, errors } = useForm({
@@ -93,3 +94,5 @@ export default function Edit({ member }) {
         </>
     );
 }
+
+Edit.layout = (page) => <AuthenticatedLayout children={page} />;
