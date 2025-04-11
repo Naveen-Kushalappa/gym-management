@@ -26,10 +26,10 @@ export default function Index({ members, filters }) {
         <>
             <Head title="Manage Members" />
             <div className="max-w-4xl mx-auto mt-10 bg-white p-6 rounded shadow">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
                     <h1 className="text-2xl font-bold">Manage Members</h1>
 
-                    <form onSubmit={handleSearch} className="px-4 py-2 flex items-center gap-2">
+                    <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
                         <input
                             type="text"
                             name="search"
@@ -45,19 +45,20 @@ export default function Index({ members, filters }) {
                             Search
                         </button>
                     </form>
-
+                    <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                     <Link
                         href={route('members.create')}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center"
                     >
                         Add Member
                     </Link>
                     <Link
                         href={route('add-payment')}
-                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
                     >
                         Add payment
                     </Link>
+                    </div>
                 </div>
 
                 <table className="w-full table-auto border">
