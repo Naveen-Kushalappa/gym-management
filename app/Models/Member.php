@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Database\Eloquent\Model;
@@ -46,13 +48,13 @@ class Member extends Authenticable
         'remember_token',
     ];
 
-    public function payments(){
-        return $this->hasMany(Payment::class);
+    public function payments(): HasMany{
+        return $this->hasMany(Payment::class, 'member_id', 'id');
     }
 
-    public function organization()
+    public function organization(): BelongsTo
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'org_id', 'id');
     }
 
     protected $attributes = [

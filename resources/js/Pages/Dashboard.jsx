@@ -1,22 +1,23 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import {Head, Link} from '@inertiajs/react';
 import Logout from '../Pages/Auth/Logout.jsx';
 
-export default function Dashboard({ user }) {
+export default function Dashboard({ member, activeMemberCount }) {
     return (
         <>
             <Head title="Dashboard" />
-            <div className="min-h-screen bg-gray-100 p-6">
+            <div className="min-h-screen p-6">
                 <div className="max-w-4xl mx-auto bg-white rounded shadow p-6">
-                    <h1 className="text-2xl font-bold mb-4">
-                        Welcome, {user.name}!
+                    <div className="flex justify-between items-center mb-4">
 
-
+                    <h1 className="flex items-center text-2xl font-bold mb-4">
+                        Welcome, {member.name}!
                     </h1>
                     <Logout />
+                    </div>
 
-                    {user.role === 'admin' ? (
-                        <AdminDashboard />
+                    {member.role === 'admin' ? (
+                        <AdminDashboard member={member} activeMemberCount={activeMemberCount} />
                     ) : (
                         <MemberDashboard />
                     )}
@@ -26,20 +27,26 @@ export default function Dashboard({ user }) {
     );
 }
 
-function AdminDashboard() {
+const AdminDashboard = ({ member, activeMemberCount }) => {
     return (
         <div>
             <p className="text-lg mb-2">You are logged in as <strong>Admin</strong>.</p>
+            <p className="text-lg mb-2">Total {activeMemberCount} members are active in <strong>{member.organization.name}</strong>.</p>
             <ul className="list-disc list-inside">
-                <li>Manage Members</li>
+                <li><Link
+                    href={route('members.index')}
+                    className="text-blue-600 hover:underline"
+                >
+                    Members
+                </Link>
+               </li>
                 <li>View Payments</li>
-                <li>System Overview</li>
             </ul>
         </div>
     );
 }
 
-function MemberDashboard() {
+const MemberDashboard = () => {
     return (
         <div>
             <p className="text-lg mb-2">You are logged in as <strong>Member</strong>.</p>
