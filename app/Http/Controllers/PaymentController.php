@@ -4,37 +4,60 @@
  use App\Models\Member;
  use App\Models\Payment;
  use Illuminate\Http\Request;
+ use Illuminate\Support\Facades\DB;
  use Illuminate\Support\Facades\Log;
  use Illuminate\Support\Facades\Validator;
+ use Inertia\Inertia;
+ use Carbon\Carbon;
 
  class PaymentController extends Controller {
 
-    public function store(Request $request, Member $member){
+     public function create(Request $request) {
+         $user = $request->user();
+
+         $members = Member::where('org_id', $user->org_id)->where('role', 'member')->get();
+
+         return Inertia::render('Payment/Create', [
+             'members' => $members,
+         ]);
+     }
+
+    public function store(Request $request){
+         $user = $request->user();
 
         $validator = Validator::make($request->all(), [
-            'month' => 'required|integer|between:1,12',
-            'year' => 'required|integer|between:2022,2030',
+            'memberId' => 'required|uuid|exists:members,id',
+            'amount' => 'required|numeric',
+            'mode' => 'required|in:UPI,Cash',
+            'startMonthYear' => 'required|date',
         ]);
-
         if ($validator->fails()) {
             return back()->withErrors($validator);
         }
 
-        $lastPayment = Payment::where('status', 'Paid')->where('year', $request->year)->where('month', $request->month)->first();
+        //todo: check if endMonth is present. If yes add multiple payments.
+        $paymentStartDate = Carbon::parse($request->startMonthYear);
+
+        $month = $paymentStartDate->month;
+        $year = $paymentStartDate->year;
+
+        $lastPayment = Payment::where('year', $year)->where('month', $month)->where('member_id', $request->memberId)->first();
 
         if($lastPayment){
             Log::info('Payment already done');
             return back()->withErrors('Payment already exists.');
         }
 
-        Payment::create([
-            'member_id' => $member->id,
-            'month' => $request->month,
-            'year' => $request->year,
-            'status' => 'Paid'
+        $payment = Payment::create([
+            'member_id' => $request->memberId,
+            'month' => $month,
+            'year' => $year,
+            'org_id' => $user->org_id,
+            'comments' => $request->comments,
+            'mode' => $request->mode,
+            'amount' => $request->amount,
         ]);
-
-        return redirect()->route('members.show', $member->id)->with('success', 'Payment recorded');
+        return redirect()->route('members.index')->with('success', 'Payment recorded');
     }
 
  }

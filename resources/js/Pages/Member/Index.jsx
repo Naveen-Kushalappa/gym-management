@@ -52,22 +52,43 @@ export default function Index({ members, filters }) {
                     >
                         Add Member
                     </Link>
+                    <Link
+                        href={route('add-payment')}
+                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                    >
+                        Add payment
+                    </Link>
                 </div>
 
                 <table className="w-full table-auto border">
                     <thead>
                     <tr className="bg-gray-100">
-                        <th className="p-2 border">Name</th>
-                        <th className="p-2 border">Email</th>
-                        <th className="p-2 border">Actions</th>
+                        <th className="p-2 border text-center">Name</th>
+                        <th className="p-2 border text-center">Payment status</th>
+                        <th className="p-2 border text-center">Gender</th>
+                        <th className="p-2 border text-center">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {members.data.map((member) => (
                         <tr key={member.id}>
-                            <td className="p-2 border">{member.name}</td>
-                            <td className="p-2 border">{member.email}</td>
+                            <td className="p-2 border">
+                               <div className="flex justify-center items-center">{member.name}</div>
+                            </td>
+                            <td className="p-2 border">
+                               <div className="flex justify-center items-center">
+                                {member.has_paid_this_month ?
+                                    <button className="bg-green-500 text-white px-4 py-2 rounded">Paid</button> :
+                                    <button className="bg-red-600 text-white px-4 py-2 rounded">UnPaid</button>
+                                }
+                               </div>
+                            </td>
+                            <td className="p-2 border">
+                                <div className="flex justify-center items-center">{member.gender}</div>
+                            </td>
                             <td className="p-2 border space-x-2">
+                                                    <div className="flex justify-center items-center space-x-2">
+
                                 <Link
                                     href={route('members.edit', member.id)}
                                     className="text-blue-600 hover:underline"
@@ -80,6 +101,7 @@ export default function Index({ members, filters }) {
                                 >
                                     Delete
                                 </button>
+                                                    </div>
                             </td>
                         </tr>
                     ))}

@@ -17,4 +17,8 @@ Route::resource('members', MemberController::class)->middleware(['auth']);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
+Route::get('/addPayment', [PaymentController::class, 'create'])->middleware(['auth'])->name('add-payment');
+
+Route::post('/addPayment', [PaymentController::class, 'store'])->middleware(['auth'])->name('store-payment');
+
 require __DIR__.'/auth.php';

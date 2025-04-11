@@ -21,7 +21,11 @@ return new class extends Migration
 
             $table->integer('month');
             $table->integer('year');
-            $table->enum('status', ['Paid', 'Unpaid'])->default('Unpaid');
+
+            $table->integer('amount');
+            $table->enum('mode', ['UPI', 'Cash'])->default('UPI');
+            $table->text('comments')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
 
