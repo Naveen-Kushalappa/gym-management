@@ -17,7 +17,7 @@ const Index = ({ payments, filters }) => {
     });
     const handleSearch = (e) => {
         e.preventDefault();
-        get(route('payements.index'), {
+        get(route('payments'), {
             preserveState: true,
             replace: true,
         });

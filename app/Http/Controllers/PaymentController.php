@@ -48,7 +48,7 @@
             return back()->withErrors('Payment already exists.');
         }
 
-        $payment = Payment::create([
+        Payment::create([
             'member_id' => $request->memberId,
             'month' => $month,
             'year' => $year,
@@ -68,21 +68,20 @@
             return response()->json(['message' => 'Logged out'], 403);
         }
 
-        $query = Payment::with('member');
+        $query = Payment::with('member')->where('org_id', $user->org_id);
 
-        //todo: Add search
         if ($request->has('search')) {
             $search = $request->search;
+
             $query->where(function ($q) use ($search) {
                 $q->where('comments', 'like', '%' . $search . '%')
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhereHas('member', function ($q2) use ($search) {
+                        $q2->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                    });
             });
         }
-//        dd($query->get());
-
-        $payments = $query->paginate(15)->withQueryString();
-//        dd($payments);
+        $payments = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         return Inertia::render('Payment/Index', [
             'payments' => $payments,
