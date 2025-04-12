@@ -32,14 +32,20 @@ const AdminDashboard = ({ member, activeMemberCount }) => {
         <div>
             <p className="text-lg mb-2">Total {activeMemberCount} members are active in <strong>{member.organization.name}</strong>.</p>
             <ul className="list-disc list-inside">
-                <li><Link
+                <li>
+                    <Link
                     href={route('members.index')}
                     className="text-blue-600 hover:underline"
                 >
                     Members
                 </Link>
                </li>
-                <li>View Payments</li>
+                <li> <Link
+                    href={route('payments')}
+                    className="text-blue-600 hover:underline"
+                >
+                    Payments
+                </Link></li>
             </ul>
         </div>
     );
