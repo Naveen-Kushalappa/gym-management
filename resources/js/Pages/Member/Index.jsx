@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
-export default function Index({ members, filters }) {
+const Index = ({ members, filters }) => {
     const { data, setData, get, delete: destroy } = useForm({
         search: filters.search || ''
     });
@@ -139,5 +139,6 @@ export default function Index({ members, filters }) {
     );
 }
 
+export default Index;
 
 Index.layout = (page) => <AuthenticatedLayout children={page} />;

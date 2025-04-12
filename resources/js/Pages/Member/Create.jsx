@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm, Head, Link } from '@inertiajs/react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
-export default function Create() {
+const Create = () => {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
@@ -93,3 +94,7 @@ export default function Create() {
         </>
     );
 }
+
+Create.layout = (page) => <AuthenticatedLayout children={page} />;
+
+export default Create;

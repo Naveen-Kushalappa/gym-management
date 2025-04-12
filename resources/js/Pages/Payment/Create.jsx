@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link, useForm, Head} from "@inertiajs/react";
-
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 const Create = ({ members }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -11,6 +11,12 @@ const Create = ({ members }) => {
         startMonthYear: null,
         endMonth: null,
     });
+
+    useEffect(() => {
+        if(members.length > 0 && !data.memberId){
+            setData("memberId", members[0].id);
+        }
+    }, [members]);
 
     const [isMultiMonthPayment, setMultiMonthPayment] = useState(false);
     const handleSubmit = (e) => {
@@ -131,5 +137,6 @@ const Create = ({ members }) => {
     )
 }
 
+Create.layout = (page) => <AuthenticatedLayout children={page} />;
 
 export default Create
