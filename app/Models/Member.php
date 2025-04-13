@@ -17,7 +17,6 @@ class Member extends Authenticable
 
     use SoftDeletes;
 
-
     protected $keyType = 'string';
     public $incrementing = false;
 
@@ -34,7 +33,8 @@ class Member extends Authenticable
 
     protected $fillable = ['name', 'gender', 'is_active', 'org_id', 'role',
         'email',
-        'password'
+        'password',
+        'org_time_slot_id'
     ];
 
     /**
@@ -54,6 +54,11 @@ class Member extends Authenticable
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'org_id', 'id');
+    }
+
+    public function timeSlot(): BelongsTo
+    {
+        return $this->belongsTo(OrgTimeSlot::class, 'org_time_slot_id', 'id');
     }
 
     protected $attributes = [
