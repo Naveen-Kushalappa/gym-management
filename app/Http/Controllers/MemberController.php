@@ -16,7 +16,7 @@
         if (!$user) {
             return response()->json(['message' => 'Logged out'], 403);
         }
-        $query = Member::with('payments')->where('org_id', $user->org_id)->where('role', 'member');
+        $query = Member::with('payments')->with('timeSlot')->where('org_id', $user->org_id)->where('role', 'member');
 
         if ($request->has('search')) {
             $search = $request->search;
