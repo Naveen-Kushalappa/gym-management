@@ -2,6 +2,7 @@
  namespace App\Http\Controllers;
  use App\Models\Member;
  use App\Models\OrgTimeSlot;
+ use Carbon\Carbon;
  use Illuminate\Http\Request;
  use Illuminate\Support\Facades\Hash;
  use Illuminate\Support\Facades\Log;
@@ -24,6 +25,22 @@
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             });
+        }
+        $month = (int)Carbon::now()->month;
+        $year = Carbon::now()->year;
+
+        if($request->has('unPaidMembers')){
+            if($request->unPaidMembers == "true") {
+                $query->whereDoesntHave('payments', function ($q) use ($month, $year) {
+                    $q->where('month', $month)
+                        ->where('year', $year);
+                });
+            }else{
+                $query->whereHas('payments', function ($q) use ($month, $year) {
+                    $q->where('month', $month)
+                        ->where('year', $year);
+                });
+            }
         }
         $members = $query->paginate(15)->withQueryString();
 

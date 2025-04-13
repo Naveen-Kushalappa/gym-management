@@ -17,14 +17,24 @@ class DashboardController extends Controller
 
         $member = Member::with('organization')->where('id', $request->user()->id)->first();
 
-        $activeMemberCount = Member::where('org_id', $user->org_id)
-            ->where('role', 'member')
-            ->where('is_active', true)
-            ->count();
+        $activeMembers = [];
+        $unPaidMemberCount = 0;
+        if($member->role == 'admin') {
+            $activeMembers = Member::where('org_id', $user->org_id)
+                ->where('role', 'member')
+                ->where('is_active', true)
+                ->get();
 
+            foreach ($activeMembers as $activeMember) {
+                if (!$activeMember->has_paid_this_month) {
+                    $unPaidMemberCount++;
+                }
+            }
+        }
         return Inertia::render('Dashboard', [
             'member' => $member,
-            'activeMemberCount' => $activeMemberCount
+            'activeMemberCount' => sizeof($activeMembers),
+            'unPaidMemberCount' => $unPaidMemberCount
         ]);
     }
 

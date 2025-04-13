@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useForm } from '@inertiajs/react';
+import React, {useEffect, useState} from 'react';
+import {Link, router, useForm} from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
@@ -22,6 +22,18 @@ const Index = ({ members, filters }) => {
         });
     };
 
+    const [paidFilterState, setPaidFilterState]  = useState(null)
+
+    useEffect(() => {
+        if (paidFilterState !== null) {
+            router.get(
+                route('members.index'),
+                { unPaidMembers: paidFilterState },
+                { preserveState: true, replace: true }
+            );
+        }
+    }, [paidFilterState]);
+
     const getTimeSlotLabel = (timeSlot) => {
         if(timeSlot){
             return timeSlot.start_time + '-' + timeSlot.end_time;
@@ -34,8 +46,26 @@ const Index = ({ members, filters }) => {
         <>
             <Head title="Manage Members" />
             <div className="max-w-4xl mx-auto mt-10 bg-white p-6 rounded shadow">
+
+                <h1 className="text-2xl font-bold">Manage Members</h1>
+
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
-                    <h1 className="text-2xl font-bold">Manage Members</h1>
+
+                        <button
+                            type="submit"
+                            onClick={() => setPaidFilterState(true)}
+                            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full sm:w-auto"
+                        >
+                            Unpaid members
+                        </button>
+
+                        <button
+                            type="submit"
+                            onClick={() => setPaidFilterState(false)}
+                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
+                        >
+                            Paid members
+                        </button>
 
                     <form
                         onSubmit={handleSearch}

@@ -2,7 +2,7 @@ import React from 'react';
 import {Head, Link} from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
-export default function Dashboard({ member, activeMemberCount }) {
+export default function Dashboard({ member, activeMemberCount, setPaidFilterState }) {
     return (
         <>
             <Head title="Dashboard" />
@@ -17,7 +17,7 @@ export default function Dashboard({ member, activeMemberCount }) {
                     </div>
 
                     {member.role === 'admin' ? (
-                        <AdminDashboard member={member} activeMemberCount={activeMemberCount} />
+                        <AdminDashboard member={member} activeMemberCount={activeMemberCount} unPaidMemberCount={unPaidMemberCount}/>
                     ) : (
                         <MemberDashboard />
                     )}
@@ -27,10 +27,18 @@ export default function Dashboard({ member, activeMemberCount }) {
     );
 }
 
-const AdminDashboard = ({ member, activeMemberCount }) => {
+const AdminDashboard = ({ member, activeMemberCount, unPaidMemberCount }) => {
+    const currentMonth = new Date().toLocaleString("en-US", { month: "long" });
     return (
         <div>
             <p className="text-lg mb-2">Total {activeMemberCount} members are active in <strong>{member.organization.name}</strong>.</p>
+            <p className="text-lg mb-2">
+                <Link
+                    href={route('members.index', { unPaidMembers: 'true'})}
+                    className="text-blue-600 hover:underline"
+                >
+                    {unPaidMemberCount} members
+                </Link> have payment pending for current month ({currentMonth}).</p>
             <ul className="list-disc list-inside">
                 <li>
                     <Link
