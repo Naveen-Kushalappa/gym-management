@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link, useForm, Head} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
+import Select from 'react-select'
 
 const Create = ({ members }) => {
     const { data, setData, post, processing, errors } = useForm({
@@ -9,24 +10,30 @@ const Create = ({ members }) => {
         comments: '',
         memberId: null,
         startMonthYear: null,
-        endMonth: null,
+        endMonthYear: null,
+        dividePaymentByMonth: false,
     });
+
+    const [membersOptions, setMembersOptions] = useState([]);
 
     useEffect(() => {
         if(members.length > 0 && !data.memberId){
             setData("memberId", members[0].id);
+
+            const options = members.map((member) => {
+                return { value: member.id, label: member.name }
+            });
+            setMembersOptions(options);
         }
     }, [members]);
 
     const [isMultiMonthPayment, setMultiMonthPayment] = useState(false);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route('store-payment'));
     };
 
-    const setVal = (e) => {
-        setMultiMonthPayment(e.target.checked)
-    }
     return (
         <>
             <Head title="Add Payment" />
@@ -37,18 +44,17 @@ const Create = ({ members }) => {
 
                     <div className="mb-4">
                         <label className="block font-medium mb-1">Member</label>
-                        {/*todo: default selects first member*/}
-                        <select name="memberId"
-                                className="w-full border p-2 rounded"
-                                value={data.memberId}
-                                onChange={(e) => setData('memberId', e.target.value)}
-                                required>
-                            {
-                                members.map((member) => {
-                                    return  (<option value={member.id}>{member.name}</option>)
-                                })
-                            }
-                        </select>
+
+                        <Select options={membersOptions}
+                                onChange={(e) => setData('memberId', e.value)}
+                                className="basic-single"
+                                classNamePrefix="select"
+                                defaultValue={membersOptions[0]}
+                                isClearable={true}
+                                isRtl={false}
+                                isSearchable={true}
+                                name="memberId"
+                        />
                     </div>
                     <div className="mb-4">
                         <label className="block font-medium mb-1">Mode</label>
@@ -101,22 +107,33 @@ const Create = ({ members }) => {
                         <input
                             type="checkbox"
                             value={isMultiMonthPayment}
-                            onChange={(e) => setVal(e)}
+                            onChange={(e) => setMultiMonthPayment(e.target.checked)}
                             className="inline-flex border p-2 rounded"
                         />
                     </div>
 
                     {isMultiMonthPayment &&
+                        <>
+                        <div className="mb-4">
+                            <label className="block font-medium mb-1">Divide payment for each month?</label>
+                            <input
+                                type="checkbox"
+                                value={data.dividePaymentByMonth}
+                                onChange={(e) => setData('dividePaymentByMonth', e.target.checked)}
+                                className="inline-flex border p-2 rounded"
+                            />
+                        </div>
                     <div className="mb-4">
                         <label className="block font-medium mb-1">Payment till</label>
                         <input
                             type="month"
-                            value={data.endMonth}
-                            onChange={(e) => setData('endMonth', e.target.value)}
+                            value={data.endMonthYear}
+                            onChange={(e) => setData('endMonthYear', e.target.value)}
                             className="w-full border p-2 rounded"
                             required={isMultiMonthPayment}
                         />
                     </div>
+                        </>
                     }
 
                     <div className="flex items-center justify-between">
