@@ -19,7 +19,8 @@ export default function Navbar({ member }) {
                     )}
                 </div>
                 <div className="flex gap-6">
-                    <Link href="/profile" className="text-gray-800 hover:text-blue-600 font-semibold">Profile</Link>
+                    {/*Enable this once profile page is active*/}
+                    {/*<Link href="/profile" className="text-gray-800 hover:text-blue-600 font-semibold">Profile</Link>*/}
 
                     <Logout />
                 </div>

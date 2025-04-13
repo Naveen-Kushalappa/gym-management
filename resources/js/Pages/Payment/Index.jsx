@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useForm } from '@inertiajs/react';
+import React, {useState} from 'react';
+import {Link, router, useForm} from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
@@ -15,13 +15,6 @@ const Index = ({ payments, filters }) => {
     const { data, setData, get } = useForm({
         search: filters.search || ''
     });
-    const handleSearch = (e) => {
-        e.preventDefault();
-        get(route('payments'), {
-            preserveState: true,
-            replace: true,
-        });
-    };
 
     const getMonth = (monthNumber) => {
         return monthNames[monthNumber - 1]
@@ -32,15 +25,24 @@ const Index = ({ payments, filters }) => {
         return date;
     }
 
+    const [month, setMonth] = useState('');
+    const [year, setYear] = useState('');
+
+    const handleFilter = (e) => {
+        e.preventDefault();
+        router.get(route('payments'), { month, year, search: data.search }, { preserveState: true, replace: true });
+    };
+
     return (
         <>
             <Head title="All payments"/>
             <div className="max-w-4xl mx-auto mt-10 bg-white p-6 rounded shadow">
+                <h1 className="text-2xl font-bold mb-4">Payments history</h1>
+
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
-                    <h1 className="text-2xl font-bold">Payments history</h1>
 
                     <form
-                        onSubmit={handleSearch}
+                        onSubmit={handleFilter}
                         className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto"
                     >
                         <input
@@ -48,7 +50,7 @@ const Index = ({ payments, filters }) => {
                             name="search"
                             value={data.search}
                             onChange={(e) => setData('search', e.target.value)}
-                            placeholder="Search"
+                            placeholder="Search by name/email/mode"
                             className="border px-3 py-2 rounded w-full sm:w-64"
                         />
                         <button
@@ -57,7 +59,53 @@ const Index = ({ payments, filters }) => {
                         >
                             Search
                         </button>
+                        {data.search && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setData('search', '');
+                                    handleFilter({ preventDefault: () => {} }); // optional: auto re-submit
+                                }}
+                                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 w-full sm:w-auto"
+                            >
+                                Clear
+                            </button>
+                        )}
                     </form>
+
+                    <form onSubmit={handleFilter}
+                          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
+
+                        <select
+                            className="border p-2 rounded"
+                            value={month}
+                            onChange={(e) => setMonth(e.target.value)}
+                        >
+                            <option value="">All Months</option>
+                            {Array.from({ length: 12 }, (_, i) => (
+                                <option key={i + 1} value={String(i + 1).padStart(2, '0')}>
+                                    {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select
+                            className="border p-2 rounded"
+                            value={year}
+                            onChange={(e) => setYear(e.target.value)}
+                        >
+                            <option value="">All Years</option>
+                            {[...Array(5)].map((_, i) => {
+                                const y = new Date().getFullYear() - i;
+                                return <option key={y} value={y}>{y}</option>;
+                            })}
+                        </select>
+
+                        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                            Filter
+                        </button>
+                    </form>
+
 
                     <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
                         <Link
@@ -73,8 +121,10 @@ const Index = ({ payments, filters }) => {
                     <thead>
                     <tr className="bg-gray-100">
                         <th className="p-2 border text-center">Member name</th>
-                        <th className="p-2 border text-center">Payment month</th>
-                        <th className="p-2 border text-center">Payment year</th>
+                        <th className="p-2 border text-center">Month</th>
+                        <th className="p-2 border text-center">Year</th>
+                        <th className="p-2 border text-center">Amount</th>
+                        <th className="p-2 border text-center">Payment mode</th>
                         <th className="p-2 border text-center">Payment recorded at</th>
                     </tr>
                     </thead>
@@ -82,13 +132,21 @@ const Index = ({ payments, filters }) => {
                     {payments.data.map((payment) => (
                         <tr key={payment.id}>
                             <td className="p-2 border">
-                                <div className="flex justify-center items-center">{payment.member.name}</div>
+                                <div className="flex justify-center items-center"
+                                     title={payment.comments}>
+                                    {payment.member.name}</div>
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">{getMonth(payment.month)}</div>
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">{payment.year}</div>
+                            </td>
+                            <td className="p-2 border">
+                                <div className="flex justify-center items-center">{payment.amount}</div>
+                            </td>
+                            <td className="p-2 border">
+                                <div className="flex justify-center items-center">{payment.mode}</div>
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">{getFormatedDate(payment.created_at)}</div>

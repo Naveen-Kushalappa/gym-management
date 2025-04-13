@@ -136,18 +136,30 @@
 
         $query = Payment::with('member')->where('org_id', $user->org_id);
 
+        if ($request->filled('month')) {
+            $query->where('month', (int)$request->month);
+        }
+        if ($request->filled('year')) {
+            $query->where('year', $request->year);
+        }
         if ($request->has('search')) {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
                 $q->where('comments', 'like', '%' . $search . '%')
+                    ->orWhere('mode', 'like', '%' . $search . '%')
                     ->orWhereHas('member', function ($q2) use ($search) {
-                        $q2->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
+                        $q2->where('id', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('name', 'like', "%{$search}%");
                     });
             });
         }
-        $payments = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+        $payments = $query
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)->withQueryString();
 
         return Inertia::render('Payment/Index', [
             'payments' => $payments,
