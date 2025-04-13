@@ -22,6 +22,14 @@ const Index = ({ members, filters }) => {
         });
     };
 
+    const getTimeSlotLabel = (timeSlot) => {
+        if(timeSlot){
+            return timeSlot.start_time + '-' + timeSlot.end_time;
+        }else {
+            return 'N/A';
+        }
+    }
+
     return (
         <>
             <Head title="Manage Members" />
@@ -70,6 +78,7 @@ const Index = ({ members, filters }) => {
                     <tr className="bg-gray-100">
                         <th className="p-2 border text-center">Name</th>
                         <th className="p-2 border text-center">Payment status</th>
+                        <th className="p-2 border text-center">Time slot</th>
                         <th className="p-2 border text-center">Gender</th>
                         <th className="p-2 border text-center">Actions</th>
                     </tr>
@@ -91,6 +100,9 @@ const Index = ({ members, filters }) => {
                                         <button className="bg-red-600 text-white px-4 py-2 rounded">UnPaid</button>
                                     }
                                 </div>
+                            </td>
+                            <td className="p-2 border">
+                                <div className="flex justify-center items-center">{getTimeSlotLabel(member.time_slot)}</div>
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">{member.gender}</div>

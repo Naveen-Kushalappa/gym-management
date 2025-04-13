@@ -1,20 +1,44 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useForm, Head, Link } from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
+import Select from "react-select";
 
-export default function Edit({ member }) {
+export default function Edit({ member, orgTimeSlots }) {
     const { data, setData, put, processing, errors } = useForm({
         name: member.name,
         email: member.email,
         password: '',
         password_confirmation: '',
         gender: member.gender,
+        orgTimeSlotId: member.org_time_slot_id,
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         put(route('members.update', member.id));
     };
+
+    const [timeSlotOptions, setTimeSlotOptions] = useState([]);
+    const [defaultTimeSlot, setDefaultTimeSlot] = useState(null);
+
+    useEffect(() => {
+        console.log('outside', orgTimeSlots);
+        if(orgTimeSlots.length > 0){
+            console.log('in use effect');
+
+            setData("orgTimeSlotId", member.org_time_slot_id);
+            const options = orgTimeSlots.map((timeSlot) => {
+                if(timeSlot.id === member.org_time_slot_id){
+                    setDefaultTimeSlot({ label: timeSlot.start_time + '-' + timeSlot.end_time, value: timeSlot.id });
+                }
+                return { value: timeSlot.id, label: timeSlot.start_time + '-' + timeSlot.end_time}
+            });
+            console.log('defaultTimeSlot', defaultTimeSlot);
+            setTimeSlotOptions(options);
+
+        }
+    }, [orgTimeSlots]);
+
 
     return (
         <>
@@ -32,6 +56,21 @@ export default function Edit({ member }) {
                             className="w-full border p-2 rounded"
                         />
                         {errors.name && <div className="text-red-600">{errors.name}</div>}
+                    </div>
+
+
+                    <div className="mb-4">
+                        <label className="block font-medium mb-1">Time-slot</label>
+                        <Select options={timeSlotOptions}
+                                onChange={(e) => setData('orgTimeSlotId', e.value)}
+                                className="basic-single"
+                                classNamePrefix="select"
+                                defaultValue={{ label:'Current slot', value: data.orgTimeSlotId}}
+                                isClearable={true}
+                                isRtl={false}
+                                isSearchable={true}
+                                name="memberId"
+                        />
                     </div>
 
                     <div className="mb-4">
