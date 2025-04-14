@@ -10,6 +10,7 @@ export default function Edit({ member, orgTimeSlots }) {
         password: '',
         password_confirmation: '',
         gender: member.gender,
+        is_active: member.is_active,
         orgTimeSlotId: member.org_time_slot_id,
     });
 
@@ -58,6 +59,17 @@ export default function Edit({ member, orgTimeSlots }) {
                         {errors.name && <div className="text-red-600">{errors.name}</div>}
                     </div>
 
+                    <div className="mb-4">
+                        <label className="block font-medium mb-1">Is Active</label>
+                        <select name="IsActive"
+                                className="w-full border p-2 rounded"
+                                value={data.is_active}
+                                onChange={(e) => setData('is_active', e.target.value)}
+                                required>
+                            <option value="1">Active</option>
+                            <option value="0">In active</option>
+                        </select>
+                    </div>
 
                     <div className="mb-4">
                         <label className="block font-medium mb-1">Time-slot</label>

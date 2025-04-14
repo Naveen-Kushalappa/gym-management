@@ -99,7 +99,6 @@
     }
     public function edit($id){
         $member = Member::findOrFail($id);
-
         $orgTimeSlots = OrgTimeSlot::where('org_id', $member->org_id)->orderBy('start_time')->get();
 
         return Inertia::render('Member/Edit', ['member' => $member, 'orgTimeSlots' => $orgTimeSlots]);
@@ -112,6 +111,7 @@
             'email' => 'required|email|unique:members,email,' . $id,
             'password' => 'nullable|string|min:6|confirmed',
             'orgTimeSlotId' => 'required|string',
+            'is_active' => 'required|in:0,1',
         ]);
 
         $member = Member::findOrFail($id);
@@ -122,6 +122,7 @@
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'org_time_slot_id' => $request->orgTimeSlotId,
+            'is_active' => (int)$request->is_active,
         ]);
 
         return Redirect::route('members.index')->with('success', 'Member updated successfully.');
