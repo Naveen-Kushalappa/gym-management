@@ -36,9 +36,8 @@ const Index = ({ payments, filters }) => {
     return (
         <>
             <Head title="All payments"/>
-            <div className="max-w-4xl mx-auto mt-10 bg-white p-6 rounded shadow">
-                <h1 className="text-2xl font-bold mb-4">Payments history</h1>
-
+            <div className="max-w-4xl mx-auto mt-6 bg-white p-6 rounded shadow">
+                <h1 className="text-2xl font-bold text-center mb-6">Manage Payments</h1>
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
 
                     <form
@@ -77,7 +76,7 @@ const Index = ({ payments, filters }) => {
                           className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full md:w-auto">
 
                         <select
-                            className="border p-2 rounded"
+                            className="border p-2 pr-2 rounded w-full sm:w-32"
                             value={month}
                             onChange={(e) => setMonth(e.target.value)}
                         >
@@ -90,7 +89,7 @@ const Index = ({ payments, filters }) => {
                         </select>
 
                         <select
-                            className="border p-2 rounded"
+                            className="border p-2 pr-4 rounded w-full sm:w-28"
                             value={year}
                             onChange={(e) => setYear(e.target.value)}
                         >
@@ -116,6 +115,8 @@ const Index = ({ payments, filters }) => {
                         </Link>
                     </div>
                 </div>
+
+                <div className="overflow-x-auto w-full">
 
                 <table className="w-full table-auto border">
                     <thead>
@@ -162,6 +163,7 @@ const Index = ({ payments, filters }) => {
                     )}
                     </tbody>
                 </table>
+                </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                     {payments.links.map((link, index) => (
                         <button
