@@ -121,14 +121,11 @@ const Index = ({ members, filters }) => {
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">
-                                    {member.has_paid_this_month ?
-                                        <button className="bg-green-500 text-white px-4 py-2 rounded">
-                                            <Link href={route('payments', { search: member.id})}>
-                                            Paid
-                                            </Link>
-                                        </button> :
-                                        <button className="bg-red-600 text-white px-4 py-2 rounded">UnPaid</button>
-                                    }
+                                    <Link href={route('payments', { search: member.id})}>
+                                        <button className={`${member.has_paid_this_month ? 'bg-green-500' : 'bg-red-600' }  text-white px-4 py-2 rounded`}>
+                                            {member.has_paid_this_month ? 'Paid' : 'UnPaid'}
+                                        </button>
+                                    </Link>
                                 </div>
                             </td>
                             <td className="p-2 border">
