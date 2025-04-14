@@ -35,7 +35,7 @@
                     $q->where('month', $month)
                         ->where('year', $year);
                 });
-            }else{
+            } elseif($request->unPaidMembers == "false") {
                 $query->whereHas('payments', function ($q) use ($month, $year) {
                     $q->where('month', $month)
                         ->where('year', $year);
