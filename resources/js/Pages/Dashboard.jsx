@@ -2,7 +2,7 @@ import React from 'react';
 import {Head, Link} from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
-export default function Dashboard({ member, activeMemberCount, setPaidFilterState }) {
+export default function Dashboard({ member, activeMemberCount, unPaidMemberCount }) {
     return (
         <>
             <Head title="Dashboard" />
