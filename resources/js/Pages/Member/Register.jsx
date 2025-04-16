@@ -2,8 +2,9 @@ import {Head, Link, useForm} from "@inertiajs/react";
 import React, {useEffect, useState} from "react";
 import Select from "react-select";
 
-const Register = ({ org }) => {
-    const orgTimeSlots = org.time_slots;
+const Register = ({ orgs, orgName = null }) => {
+    const orgTimeSlots = orgs[0].time_slots;
+
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
@@ -11,7 +12,7 @@ const Register = ({ org }) => {
         password_confirmation: '',
         gender: 'Male',
         orgTimeSlotId: null,
-        orgId: org.id,
+        orgId: null,
     });
 
     const handleSubmit = (e) => {
@@ -20,6 +21,18 @@ const Register = ({ org }) => {
     };
 
     const [timeSlotOptions, setTimeSlotOptions] = useState([]);
+    const [orgSelectorOptions, setOrgSelectorOptions] = useState([]);
+
+    useEffect(() => {
+        if(orgs.length > 0 && !data.orgId){
+            setData("orgId", orgs[0].id);
+            const orgIdOptions = orgs.map((org) => {
+                return { value: org.id, label: org.name }
+            });
+            setOrgSelectorOptions(orgIdOptions);
+        }
+    }, [orgs]);
+
 
     useEffect(() => {
         if(orgTimeSlots.length > 0 && !data.orgTimeSlot){
@@ -36,7 +49,7 @@ const Register = ({ org }) => {
         <>
             <Head title="Add Member" />
             <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-                <h2 className="text-xl font-bold mb-4">Register for {org.name}</h2>
+                <h2 className="text-xl font-bold mb-4">Register {orgName ? 'for '+orgName : ''}</h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
@@ -50,6 +63,20 @@ const Register = ({ org }) => {
                         {errors.name && <div className="text-red-600">{errors.name}</div>}
                     </div>
 
+
+                    <div className="mb-4">
+                        <label className="block font-medium mb-1">Gym name</label>
+                        <Select options={orgSelectorOptions}
+                                onChange={(e) => setData('orgId', e.value)}
+                                className="basic-single"
+                                classNamePrefix="select"
+                                defaultValue={orgSelectorOptions[0]}
+                                isClearable={true}
+                                isRtl={false}
+                                isSearchable={true}
+                                name="memberId"
+                        />
+                    </div>
 
                     <div className="mb-4">
                         <label className="block font-medium mb-1">Time-slot</label>

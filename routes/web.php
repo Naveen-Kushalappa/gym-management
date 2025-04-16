@@ -21,7 +21,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
 });
 
-Route::get('register/{orgId}', [MemberController::class, 'register'])->name('register');
+Route::get('register/{orgId?}', [MemberController::class, 'register'])->name('register');
 
 Route::post('register', [MemberController::class, 'registerMember'])->name('registerMember');
 

@@ -21,10 +21,12 @@
 
         $isAdminUser = $user->role == 'admin';
 
-        $query = Member::with('payments')->with('timeSlot')->where('org_id', $user->org_id)->where('role', 'member');
+        $query = Member::with('payments')->with('timeSlot')
+            ->where('org_id', $user->org_id)->where('role', 'member');
 
         if(!$isAdminUser) {
-            $query->where('org_time_slot_id', $user->org_time_slot_id);
+            $query->where('org_time_slot_id', $user->org_time_slot_id)
+                ->orderByRaw("id = ? DESC", [$user->id]);
         }
         if ($request->has('search')) {
             $search = $request->search;
@@ -180,13 +182,22 @@
          return Redirect::back()->with(['message' => 'Member deleted']);
      }
 
-     public function register(Request $request, $orgId){
+     public function register($orgId = null){
+         $orgName = null;
+         if($orgId) {
+             $org = Organization::with(['timeSlots' => function ($query) {
+                 $query->orderBy('start_time');
+             }])->findOrFail($orgId);
+             $orgName = $org->name;
+             $allOrgs = [$org];
+         }else{
+             $allOrgs = Organization::with(['timeSlots' => function ($query) {
+                 $query->orderBy('start_time');
+             }])->get();
 
-         $org = Organization::with(['timeSlots' => function ($query) {
-            $query->orderBy('start_time');
-         }])->findOrFail($orgId);
+         }
 
-         return Inertia::render('Member/Register', [ 'org' => $org ]);
+         return Inertia::render('Member/Register', [ 'orgs' => $allOrgs, 'orgName' => $orgName ]);
 
      }
  }
