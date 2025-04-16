@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Link, router, useForm} from '@inertiajs/react';
+import {Link, router, useForm, usePage} from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 const Index = ({ members, filters }) => {
+
+    const user = usePage().props.auth.user;
+
     const { data, setData, get, delete: destroy } = useForm({
         search: filters.search || ''
     });
@@ -97,12 +100,14 @@ const Index = ({ members, filters }) => {
 
                     {/* Action Links */}
                     <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                        { user.role === 'admin' &&
                         <Link
                             href={route('members.create')}
                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center"
                         >
                             + Member
                         </Link>
+                        }
                         <Link
                             href={route('add-payment')}
                             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
@@ -131,11 +136,20 @@ const Index = ({ members, filters }) => {
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">
-                                    <Link href={route('payments', { search: member.id})}>
-                                        <button className={`${member.has_paid_this_month ? 'bg-green-500' : 'bg-red-600' }  text-white px-4 py-2 rounded`}>
+                                    {user.role === 'admin' || user.id === member.id ? (
+                                        <Link href={route('payments', { search: member.id })}>
+                                            <button className={`${member.has_paid_this_month ? 'bg-green-500' : 'bg-red-600'} text-white px-4 py-2 rounded`}>
+                                                {member.has_paid_this_month ? 'Paid' : 'UnPaid'}
+                                            </button>
+                                        </Link>
+                                    ) : (
+                                        <button
+                                            className={`${member.has_paid_this_month ? 'bg-green-500' : 'bg-red-600'} text-white px-4 py-2 rounded opacity-50 cursor-not-allowed`}
+                                            disabled
+                                        >
                                             {member.has_paid_this_month ? 'Paid' : 'UnPaid'}
                                         </button>
-                                    </Link>
+                                    )}
                                 </div>
                             </td>
                             <td className="p-2 border">
@@ -147,18 +161,18 @@ const Index = ({ members, filters }) => {
                             <td className="p-2 border space-x-2">
                                 <div className="flex justify-center items-center space-x-2">
 
-                                    <Link
-                                        href={route('members.edit', member.id)}
-                                        className="text-blue-600 hover:underline"
-                                    >
-                                        Edit
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDelete(member.id)}
-                                        className="text-red-600 hover:underline"
-                                    >
-                                        Delete
-                                    </button>
+                                    {(user.role === 'admin' || user.id === member.id) &&
+                                        <Link href={route('members.edit', member.id)} className="text-blue-600 hover:underline">
+                                            Edit
+                                        </Link>
+                                    }
+                                    {user.role === 'admin' &&
+                                        <button
+                                            onClick={() => handleDelete(member.id)}
+                                            className="text-red-600 hover:underline"
+                                        >Delete
+                                        </button>
+                                    }
                                 </div>
                             </td>
                         </tr>

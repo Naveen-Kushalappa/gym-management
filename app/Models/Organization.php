@@ -36,4 +36,8 @@ class Organization extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function timeSlots(): HasMany{
+        return $this->hasMany(OrgTimeSlot::class, 'org_id', 'id');
+    }
 }

@@ -1,6 +1,7 @@
 <?php
  namespace App\Http\Controllers;
  use App\Models\Member;
+ use App\Models\Organization;
  use App\Models\OrgTimeSlot;
  use Carbon\Carbon;
  use Illuminate\Http\Request;
@@ -17,8 +18,14 @@
         if (!$user) {
             return response()->json(['message' => 'Logged out'], 403);
         }
+
+        $isAdminUser = $user->role == 'admin';
+
         $query = Member::with('payments')->with('timeSlot')->where('org_id', $user->org_id)->where('role', 'member');
 
+        if(!$isAdminUser) {
+            $query->where('org_time_slot_id', $user->org_time_slot_id);
+        }
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -64,6 +71,9 @@
         return Inertia::render('Member/Create', [ 'orgTimeSlots' => $orgTimeSlots ]);
     }
 
+    /***
+     * Store member created from admin page
+     */
     public function store(Request  $request){
         $user = $request->user();
 
@@ -90,8 +100,34 @@
 
         Log::info($member);
 
-//        return Inertia::render('Member/Index');
         return Redirect::route('members.index')->with('success', 'Member created successfully.');
+    }
+
+     /***
+      * Store member created from member registration
+      */
+     public function registerMember(Request $request){
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:members',
+            'gender' => 'required|in:Male,Female',
+            'password' => 'required|string|min:6|confirmed',
+            'orgTimeSlotId' => 'required|string',
+            'orgId' => 'required|uuid|exists:organizations,id',
+        ]);
+
+        $member = Member::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'gender' => $request->gender,
+            'password' => Hash::make($request->password),
+            'role' => 'member',
+            'org_id' => $request->orgId,
+            'org_time_slot_id' => $request->orgTimeSlotId,
+        ]);
+
+        return Redirect::route('login')->with('success', 'Member created successfully.');
     }
 
     public function show(Member $member){
@@ -142,5 +178,15 @@
 
          $member->delete();
          return Redirect::back()->with(['message' => 'Member deleted']);
+     }
+
+     public function register(Request $request, $orgId){
+
+         $org = Organization::with(['timeSlots' => function ($query) {
+            $query->orderBy('start_time');
+         }])->findOrFail($orgId);
+
+         return Inertia::render('Member/Register', [ 'org' => $org ]);
+
      }
  }

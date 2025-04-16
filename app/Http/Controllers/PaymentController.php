@@ -16,10 +16,17 @@
      public function create(Request $request) {
          $user = $request->user();
 
-         $members = Member::where('org_id', $user->org_id)->where('role', 'member')->get();
+         $isAdminUser = $user->role == 'admin';
+
+         $members = Member::where('org_id', $user->org_id)->where('role', 'member');
+
+         if(!$isAdminUser) {
+             $members = $members->where('id', $user->id)->get();
+         }
 
          return Inertia::render('Payment/Create', [
              'members' => $members,
+             'userRole' =>  $user->role,
          ]);
      }
 
@@ -134,7 +141,13 @@
             return response()->json(['message' => 'Logged out'], 403);
         }
 
+        $isAdminUser = $user->role == 'admin';
+
         $query = Payment::with('member')->where('org_id', $user->org_id);
+
+        if(!$isAdminUser) {
+            $query->where('member_id', $user->id);
+        }
 
         if ($request->filled('month')) {
             $query->where('month', (int)$request->month);

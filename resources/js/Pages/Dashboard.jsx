@@ -11,15 +11,15 @@ export default function Dashboard({ member, activeMemberCount, unPaidMemberCount
                     <div className="flex justify-between items-center mb-4">
 
                     <h1 className="flex items-center text-2xl font-bold mb-4">
-                        Welcome, {member.name}!
+                        Welcome, {member.name} to {member.organization.name}!
                     </h1>
-                        <p className="text-lg mb-2">You are logged in as <strong>Admin</strong>.</p>
+                        <p className="text-lg mb-2">You are logged in as <strong>{member.role}</strong>.</p>
                     </div>
 
                     {member.role === 'admin' ? (
                         <AdminDashboard member={member} activeMemberCount={activeMemberCount} unPaidMemberCount={unPaidMemberCount}/>
                     ) : (
-                        <MemberDashboard />
+                        <MemberDashboard member={member}/>
                     )}
                 </div>
             </div>
@@ -38,7 +38,9 @@ const AdminDashboard = ({ member, activeMemberCount, unPaidMemberCount }) => {
                     className="text-blue-600 hover:underline"
                 >
                     {unPaidMemberCount} members
-                </Link> have payment pending for current month ({currentMonth}).</p>
+                </Link> have payment pending for current month ({currentMonth}).
+            </p>
+            {/* todo : Add registration link for org*/}
             <ul className="list-disc list-inside">
                 <li>
                     <Link
@@ -59,13 +61,27 @@ const AdminDashboard = ({ member, activeMemberCount, unPaidMemberCount }) => {
     );
 }
 
-const MemberDashboard = () => {
+const MemberDashboard = ({ member }) => {
+    const currentMonth = new Date().toLocaleString("en-US", { month: "long" });
+
     return (
         <div>
-            <p className="text-lg mb-2">You are logged in as <strong>Member</strong>.</p>
+            {!member.has_paid_this_month && <strong className="text-red-600 animate-pulse">
+                Payment for {currentMonth} is due.</strong> }
             <ul className="list-disc list-inside">
-                <li>View Profile</li>
-                <li>Check Payment Status</li>
+                <li>
+                    <Link href={route('payments')} className="text-blue-600 hover:underline">
+                        Payments history
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href={route('members.index')}
+                        className="text-blue-600 hover:underline"
+                    >
+                        Members for this slot
+                    </Link>
+                </li>
                 <li>Update Details</li>
             </ul>
         </div>

@@ -3,7 +3,7 @@ import {Link, useForm, Head} from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Select from 'react-select'
 
-const Create = ({ members }) => {
+const Create = ({ members, userRole }) => {
     const { data, setData, post, processing, errors } = useForm({
         mode: 'UPI',
         amount: '',
@@ -102,17 +102,19 @@ const Create = ({ members }) => {
                         />
                     </div>
 
-                    <div className="mb-4">
-                        <label className="block font-medium mb-1">Multiple months</label>
-                        <input
-                            type="checkbox"
-                            value={isMultiMonthPayment}
-                            onChange={(e) => setMultiMonthPayment(e.target.checked)}
-                            className="inline-flex border p-2 rounded"
-                        />
-                    </div>
+                    { userRole === 'admin' &&
+                        <div className="mb-4">
+                            <label className="block font-medium mb-1">Multiple months</label>
+                            <input
+                                type="checkbox"
+                                value={isMultiMonthPayment}
+                                onChange={(e) => setMultiMonthPayment(e.target.checked)}
+                                className="inline-flex border p-2 rounded"
+                            />
+                        </div>
+                    }
 
-                    {isMultiMonthPayment &&
+                    {isMultiMonthPayment && userRole === 'admin' &&
                         <>
                         <div className="mb-4">
                             <label className="block font-medium mb-1">Divide payment for each month?</label>

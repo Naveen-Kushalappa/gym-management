@@ -1,20 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import { useForm, Head, Link } from '@inertiajs/react';
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
+import {Head, Link, useForm} from "@inertiajs/react";
+import React, {useEffect, useState} from "react";
 import Select from "react-select";
 
-const Create = ({ orgTimeSlots }) => {
+const Register = ({ org }) => {
+    const orgTimeSlots = org.time_slots;
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         password: '',
+        password_confirmation: '',
         gender: 'Male',
         orgTimeSlotId: null,
+        orgId: org.id,
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('members.store'));
+        post(route('registerMember'));
     };
 
     const [timeSlotOptions, setTimeSlotOptions] = useState([]);
@@ -34,7 +36,7 @@ const Create = ({ orgTimeSlots }) => {
         <>
             <Head title="Add Member" />
             <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-                <h2 className="text-xl font-bold mb-4">Add New Member</h2>
+                <h2 className="text-xl font-bold mb-4">Register for {org.name}</h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
@@ -86,6 +88,15 @@ const Create = ({ orgTimeSlots }) => {
                     </div>
 
                     <div className="mb-4">
+                        <label className="block font-medium mb-1">Confirm Password</label>
+                        <input
+                            type="password"
+                            value={data.password_confirmation}
+                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                            className="w-full border p-2 rounded"
+                        />
+                    </div>
+                    <div className="mb-4">
                         <label className="block font-medium mb-1">Gender</label>
                         <select name="gender"
                                 className="w-full border p-2 rounded"
@@ -112,9 +123,8 @@ const Create = ({ orgTimeSlots }) => {
                 </form>
             </div>
         </>
-    );
+    )
+
 }
 
-Create.layout = (page) => <AuthenticatedLayout children={page} />;
-
-export default Create;
+export default Register
