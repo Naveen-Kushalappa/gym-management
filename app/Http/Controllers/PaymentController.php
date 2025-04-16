@@ -21,8 +21,9 @@
          $members = Member::where('org_id', $user->org_id)->where('role', 'member');
 
          if(!$isAdminUser) {
-             $members = $members->where('id', $user->id)->get();
+             $members = $members->where('id', $user->id);
          }
+         $members = $members->get();
 
          return Inertia::render('Payment/Create', [
              'members' => $members,
