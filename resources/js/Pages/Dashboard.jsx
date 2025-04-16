@@ -32,9 +32,10 @@ const AdminDashboard = ({ member, activeMemberCount, unPaidMemberCount }) => {
     const currentMonth = new Date().toLocaleString("en-US", { month: "long" });
     return (
         <div>
-            <p className="text-lg mb-2">Register new members link :
+            <div className="text-lg mb-2 flex items-center gap-2">
+                <span>Register new members link:</span>
                 <CopyLink url={route('register', {orgId: member.org_id})} />
-            </p>
+            </div>
             <p className="text-lg mb-2">Total {activeMemberCount} members are active in <strong>{member.organization.name}</strong>.</p>
             <p className="text-lg mb-2">
                 <Link

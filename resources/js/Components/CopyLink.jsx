@@ -15,7 +15,6 @@ const CopyLink = ({ url }) => {
 
     return (
         <div className="flex items-center gap-2">
-            <span className="text-blue-600 underline">{url}</span>
             <button
                 onClick={handleCopy}
                 className="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded text-sm"

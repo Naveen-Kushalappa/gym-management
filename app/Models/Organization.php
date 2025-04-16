@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ActiveOrganizationScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,7 +30,12 @@ class Organization extends Model
         'name',
         'address',
         'contact_number',
-        'email'
+        'email',
+        'is_active',
+    ];
+
+    public $casts = [
+        'is_active' => 'boolean',
     ];
 
     public function members(): HasMany
@@ -39,5 +45,10 @@ class Organization extends Model
 
     public function timeSlots(): HasMany{
         return $this->hasMany(OrgTimeSlot::class, 'org_id', 'id');
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new ActiveOrganizationScope);
     }
 }
