@@ -1,6 +1,7 @@
 import React from 'react';
 import {Head, Link} from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
+import CopyLink from "@/Components/CopyLink.jsx";
 
 export default function Dashboard({ member, activeMemberCount, unPaidMemberCount }) {
     return (
@@ -31,6 +32,9 @@ const AdminDashboard = ({ member, activeMemberCount, unPaidMemberCount }) => {
     const currentMonth = new Date().toLocaleString("en-US", { month: "long" });
     return (
         <div>
+            <p className="text-lg mb-2">Register new members link :
+                <CopyLink url={route('register', {orgId: member.org_id})} />
+            </p>
             <p className="text-lg mb-2">Total {activeMemberCount} members are active in <strong>{member.organization.name}</strong>.</p>
             <p className="text-lg mb-2">
                 <Link

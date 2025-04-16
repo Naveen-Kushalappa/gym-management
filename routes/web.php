@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('register/{orgId}', [MemberController::class, 'register'])->name('register');
+
 Route::post('register', [MemberController::class, 'registerMember'])->name('registerMember');
 
 

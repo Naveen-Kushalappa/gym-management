@@ -22,7 +22,7 @@ export default function Login() {
             <Head title="Login" />
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
                 <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-                    <h2 className="text-2xl font-bold mb-6 text-center">Login to Your Account</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-center">Login to your account</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
