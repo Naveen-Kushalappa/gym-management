@@ -28,6 +28,9 @@
             $query->where('org_time_slot_id', $user->org_time_slot_id)
                 ->orderByRaw("id = ? DESC", [$user->id]);
         }
+        if($request->has('timeSlotId') && $request->timeSlotId != null) {
+            $query->where('org_time_slot_id', $request->timeSlotId);
+        }
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -53,9 +56,12 @@
         }
         $members = $query->paginate(15)->withQueryString();
 
+        $orgTimeSlots = OrgTimeSlot::where('org_id',$user->org_id )->get();
+
         return Inertia::render('Member/Index', [
             'members' => $members,
-            'filters' => $request->only('search')
+            'filters' => $request->only('search'),
+            'orgTimeSlots' => $orgTimeSlots
         ]);
     }
 

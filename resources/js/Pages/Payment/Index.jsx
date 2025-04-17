@@ -37,7 +37,19 @@ const Index = ({ payments, filters }) => {
         <>
             <Head title="All payments"/>
             <div className="max-w-4xl mx-auto mt-6 bg-white p-6 rounded shadow">
-                <h1 className="text-2xl font-bold text-center mb-6">Manage Payments</h1>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                    <h1 className="text-2xl font-bold text-center sm:text-left mb-4">Payments</h1>
+
+                    {/* Action Links */}
+                    <div className="flex gap-2 justify-center sm:justify-end">
+                        <Link
+                            href={route('add-payment')}
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
+                        >
+                            Add payment
+                        </Link>
+                    </div>
+                </div>
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
 
                     <form
@@ -104,16 +116,6 @@ const Index = ({ payments, filters }) => {
                             Filter
                         </button>
                     </form>
-
-
-                    <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                        <Link
-                            href={route('add-payment')}
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
-                        >
-                            Add Payment
-                        </Link>
-                    </div>
                 </div>
 
                 <div className="overflow-x-auto w-full">

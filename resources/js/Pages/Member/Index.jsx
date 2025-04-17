@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
-const Index = ({ members, filters }) => {
+const Index = ({ members, filters, orgTimeSlots }) => {
 
     const user = usePage().props.auth.user;
 
@@ -44,12 +44,41 @@ const Index = ({ members, filters }) => {
             return 'N/A';
         }
     }
+    const [timeSlotFilter, setTimeSlotFilter] = useState("");
+
+    useEffect(() => {
+            router.get(
+                route('members.index'),
+                { timeSlotId: timeSlotFilter},
+                { preserveState: true, replace: true }
+            );
+    }, [timeSlotFilter]);
 
     return (
         <>
             <Head title="Manage Members"/>
             <div className="max-w-4xl mx-auto mt-6 bg-white p-6 rounded shadow">
-                <h1 className="text-2xl font-bold text-center mb-6">Manage Members</h1>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                    <h1 className="text-2xl font-bold text-center sm:text-left mb-4">Members</h1>
+
+                    {/* Action Links */}
+                    <div className="flex gap-2 justify-center sm:justify-end">
+                        { user.role === 'admin' &&
+                            <Link
+                                href={route('members.create')}
+                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center"
+                            >
+                                Add member
+                            </Link>
+                        }
+                        <Link
+                            href={route('add-payment')}
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
+                        >
+                            Add payment
+                        </Link>
+                    </div>
+                </div>
                 <div className="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between mb-6">
 
                     {/* Search Form */}
@@ -72,6 +101,21 @@ const Index = ({ members, filters }) => {
                             Search
                         </button>
                     </form>
+
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center w-full md:w-auto">
+                        <select
+                            className="border p-2 pr-2 rounded w-full sm:w-48"
+                            value={timeSlotFilter}
+                            onChange={(e) => setTimeSlotFilter(e.target.value)}
+                        >
+                            <option value="">All timeslots</option>
+                            {orgTimeSlots.map((timeSlot, i) => (
+                                <option key={i} value={timeSlot.id}>
+                                    {`${timeSlot.end_time} - ${timeSlot.start_time}`}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
                     {/* Filter Buttons */}
                     <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
@@ -96,24 +140,6 @@ const Index = ({ members, filters }) => {
                         >
                             Paid
                         </button>
-                    </div>
-
-                    {/* Action Links */}
-                    <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-                        { user.role === 'admin' &&
-                        <Link
-                            href={route('members.create')}
-                            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center"
-                        >
-                            + Member
-                        </Link>
-                        }
-                        <Link
-                            href={route('add-payment')}
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center"
-                        >
-                            + Payment
-                        </Link>
                     </div>
                 </div>
 
