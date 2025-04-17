@@ -86,7 +86,7 @@
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:members',
             'gender' => 'required|in:Male,Female',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6',
             'orgTimeSlotId' => 'required|string',
         ]);
 
