@@ -40,7 +40,7 @@ class Organization extends Model
 
     public function members(): HasMany
     {
-        return $this->hasMany(Member::class);
+        return $this->hasMany(Member::class, 'org_id', 'id');
     }
 
     public function timeSlots(): HasMany{

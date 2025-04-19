@@ -70,13 +70,22 @@
 
         $user = $request->user();
 
-        if ($user->role !== 'admin') {
+        if ($user->role == 'member') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
+        $orgId = $user->org_id;
+        $organizations = null;
+        if($user->role == 'super_admin')
+        {
+            if($request->has('orgId')) {
+                $orgId = $request->orgId;
+            }
+            $organizations = Organization::get();
+        }
+        $orgTimeSlots = OrgTimeSlot::where('org_id', $orgId)->orderBy('start_time')->get();
 
-        $orgTimeSlots = OrgTimeSlot::where('org_id', $user->org_id)->orderBy('start_time')->get();
-
-        return Inertia::render('Member/Create', [ 'orgTimeSlots' => $orgTimeSlots ]);
+        return Inertia::render('Member/Create', [ 'orgTimeSlots' => $orgTimeSlots, 'orgId' => $orgId,
+            'organizations' => $organizations ]);
     }
 
     /***
@@ -85,7 +94,7 @@
     public function store(Request  $request){
         $user = $request->user();
 
-        if ($user->role !== 'admin') {
+        if ($user->role == 'member') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $request->validate([
@@ -95,14 +104,15 @@
             'password' => 'required|string|min:6',
             'orgTimeSlotId' => 'required|string',
         ]);
+        $orgId =  $user->org_id ?: $request->orgId;
 
         $member = Member::create([
             'name' => $request->name,
             'email' => $request->email,
             'gender' => $request->gender,
             'password' => Hash::make($request->password),
-            'role' => 'member',
-            'org_id' => $user->org_id,
+            'role' => $request->role,
+            'org_id' => $orgId,
             'org_time_slot_id' => $request->orgTimeSlotId,
         ]);
 

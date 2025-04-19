@@ -14,7 +14,11 @@ export default function Login() {
 
     const { props } = usePage();
     if (props.auth?.user) {
-        router.visit('/');
+        if(props.auth.user.role === 'super_admin'){
+            router.visit('/admin/organizations');
+        }else{
+            router.visit('/');
+        }
     }
 
     return (
