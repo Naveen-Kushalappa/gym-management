@@ -1,16 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import { useForm, Head, Link } from '@inertiajs/react';
+import {useForm, Head, Link, usePage} from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 import Select from "react-select";
 
-const Create = ({ orgTimeSlots }) => {
+const Create = ({ orgTimeSlots, orgId, organizations = null }) => {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         password: '',
         gender: 'Male',
         orgTimeSlotId: null,
+        orgId: orgId,
+        role: 'member',
     });
+
+    const user = usePage().props.auth.user;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -20,7 +24,7 @@ const Create = ({ orgTimeSlots }) => {
     const [timeSlotOptions, setTimeSlotOptions] = useState([]);
 
     useEffect(() => {
-        if(orgTimeSlots.length > 0 && !data.orgTimeSlot){
+        if(orgTimeSlots.length > 0 && !data.orgTimeSlot && user.role !== 'super_admin' ){
             setData("orgTimeSlotId", orgTimeSlots[0].id);
 
             const options = orgTimeSlots.map((timeSlot) => {
@@ -49,7 +53,8 @@ const Create = ({ orgTimeSlots }) => {
                     </div>
 
 
-                    <div className="mb-4">
+                    {user.role==="admin" &&
+                        <div className="mb-4">
                         <label className="block font-medium mb-1">Time-slot</label>
                         <Select options={timeSlotOptions}
                                 onChange={(e) => setData('orgTimeSlotId', e.value)}
@@ -62,6 +67,7 @@ const Create = ({ orgTimeSlots }) => {
                                 name="memberId"
                         />
                     </div>
+                    }
 
                     <div className="mb-4">
                         <label className="block font-medium mb-1">Email</label>
@@ -96,6 +102,37 @@ const Create = ({ orgTimeSlots }) => {
                             <option value="Female">Female</option>
                         </select>
                     </div>
+
+                    {user.role === 'super_admin' &&
+                        <div className="mb-4">
+                        <label className="block font-medium mb-1">Role</label>
+                        <select name="role"
+                                className="w-full border p-2 rounded"
+                                value={data.role}
+                                onChange={(e) => setData('role', e.target.value)}
+                                required>
+                            <option value="admin">Admin</option>
+                            <option value="member">Member</option>
+                        </select>
+                    </div>
+                    }
+                    {user.role === 'super_admin' &&
+                        <div className="mb-4">
+                        <label className="block font-medium mb-1">Org</label>
+                        <select name="role"
+                                className="w-full border p-2 rounded"
+                                value={data.orgId}
+                                onChange={(e) => setData('orgId', e.target.value)}
+                                required>
+                            <option value="">Select org</option>
+                                        {organizations.map((org, i) => (
+                                            <option key={i} value={org.id}>
+                                                {org.name}
+                                            </option>
+                                        ))}
+                        </select>
+                    </div>
+                    }
 
                     <div className="flex items-center justify-between">
                         <button
