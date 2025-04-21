@@ -102,7 +102,7 @@
             'email' => 'required|email|unique:members',
             'gender' => 'required|in:Male,Female',
             'password' => 'required|string|min:6',
-            'orgTimeSlotId' => 'required|string',
+            'orgTimeSlotId' => 'nullable|integer|exists:time_slots,id',
         ]);
         $orgId =  $user->org_id ?: $request->orgId;
 
@@ -116,9 +116,12 @@
             'org_time_slot_id' => $request->orgTimeSlotId,
         ]);
 
-        Log::info($member);
-
-        return Redirect::route('members.index')->with('success', 'Member created successfully.');
+        if($user->role == 'super_admin') {
+            $redirectRoute = 'admin.dashboard';
+        }else{
+            $redirectRoute = 'member.index';
+        }
+        return Redirect::route($redirectRoute)->with('success', 'Member created successfully.');
     }
 
      /***

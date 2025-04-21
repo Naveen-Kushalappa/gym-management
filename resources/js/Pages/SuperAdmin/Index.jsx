@@ -1,6 +1,6 @@
 import {Head, Link} from "@inertiajs/react";
-import {Inertia} from "@inertiajs/inertia";
 import React from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.jsx";
 
 const Index = ({ organizations }) => {
 
@@ -16,69 +16,6 @@ const Index = ({ organizations }) => {
 
                     </div>
                 </div>
-                {/*<div className="flex flex-col gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between mb-6">*/}
-
-                {/*    /!* Search Form *!/*/}
-                {/*    <form*/}
-                {/*        onSubmit={handleSearch}*/}
-                {/*        className="flex flex-col sm:flex-row gap-2 w-full md:w-auto"*/}
-                {/*    >*/}
-                {/*        <input*/}
-                {/*            type="text"*/}
-                {/*            name="search"*/}
-                {/*            value={data.search}*/}
-                {/*            onChange={(e) => setData('search', e.target.value)}*/}
-                {/*            placeholder="Search by name/email"*/}
-                {/*            className="border px-3 py-2 rounded w-full sm:w-64"*/}
-                {/*        />*/}
-                {/*        <button*/}
-                {/*            type="submit"*/}
-                {/*            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"*/}
-                {/*        >*/}
-                {/*            Search*/}
-                {/*        </button>*/}
-                {/*    </form>*/}
-
-                {/*    <div className="flex flex-col sm:flex-row items-stretch sm:items-center w-full md:w-auto">*/}
-                {/*        <select*/}
-                {/*            className="border p-2 pr-2 rounded w-full sm:w-48"*/}
-                {/*            value={timeSlotFilter}*/}
-                {/*            onChange={(e) => setTimeSlotFilter(e.target.value)}*/}
-                {/*        >*/}
-                {/*            <option value="">All timeslots</option>*/}
-                {/*            {orgTimeSlots.map((timeSlot, i) => (*/}
-                {/*                <option key={i} value={timeSlot.id}>*/}
-                {/*                    {`${timeSlot.end_time} - ${timeSlot.start_time}`}*/}
-                {/*                </option>*/}
-                {/*            ))}*/}
-                {/*        </select>*/}
-                {/*    </div>*/}
-
-                {/*    /!* Filter Buttons *!/*/}
-                {/*    <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">*/}
-                {/*        <button*/}
-                {/*            type="button"*/}
-                {/*            onClick={() => setPaidFilterState('all')}*/}
-                {/*            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"*/}
-                {/*        >*/}
-                {/*            All*/}
-                {/*        </button>*/}
-                {/*        <button*/}
-                {/*            type="button"*/}
-                {/*            onClick={() => setPaidFilterState(true)}*/}
-                {/*            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full sm:w-auto"*/}
-                {/*        >*/}
-                {/*            Unpaid*/}
-                {/*        </button>*/}
-                {/*        <button*/}
-                {/*            type="button"*/}
-                {/*            onClick={() => setPaidFilterState(false)}*/}
-                {/*            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full sm:w-auto"*/}
-                {/*        >*/}
-                {/*            Paid*/}
-                {/*        </button>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
 
                 <div className="overflow-x-auto w-full">
                     <table className="w-full table-auto border">
@@ -100,7 +37,7 @@ const Index = ({ organizations }) => {
                                     <div className="flex justify-center items-center">{org.member_count}</div>
                                 </td>
                                 <td className="p-2 border">
-                                    <Link href={route('payments')}>
+                                    <Link href={route('admin.editTimeslots', { orgId: org.id })}>
                                         Edit
                                     </Link>
                                 </td>
@@ -114,19 +51,6 @@ const Index = ({ organizations }) => {
                                             Add admin
                                         </Link>
                                     </div>
-                                    {/*    {(user.role === 'admin' || user.id === member.id) &&*/}
-                                    {/*        <Link href={route('members.edit', member.id)} className="text-blue-600 hover:underline">*/}
-                                    {/*            Edit*/}
-                                    {/*        </Link>*/}
-                                    {/*    }*/}
-                                    {/*    {user.role === 'admin' &&*/}
-                                    {/*        <button*/}
-                                    {/*            onClick={() => handleDelete(member.id)}*/}
-                                    {/*            className="text-red-600 hover:underline"*/}
-                                    {/*        >Delete*/}
-                                    {/*        </button>*/}
-                                    {/*    }*/}
-                                    {/*</div>*/}
                                 </td>
                             </tr>
                         ))}
@@ -138,5 +62,6 @@ const Index = ({ organizations }) => {
     );
 }
 
-
 export  default Index
+
+Index.layout = (page) => <AuthenticatedLayout children={page} />;

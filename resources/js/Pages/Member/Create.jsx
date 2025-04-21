@@ -24,7 +24,7 @@ const Create = ({ orgTimeSlots, orgId, organizations = null }) => {
     const [timeSlotOptions, setTimeSlotOptions] = useState([]);
 
     useEffect(() => {
-        if(orgTimeSlots.length > 0 && !data.orgTimeSlot){
+        if(orgTimeSlots.length > 0 && !data.orgTimeSlot && user.role !== 'super_admin' ){
             setData("orgTimeSlotId", orgTimeSlots[0].id);
 
             const options = orgTimeSlots.map((timeSlot) => {
@@ -53,7 +53,8 @@ const Create = ({ orgTimeSlots, orgId, organizations = null }) => {
                     </div>
 
 
-                    <div className="mb-4">
+                    {user.role==="admin" &&
+                        <div className="mb-4">
                         <label className="block font-medium mb-1">Time-slot</label>
                         <Select options={timeSlotOptions}
                                 onChange={(e) => setData('orgTimeSlotId', e.value)}
@@ -66,6 +67,7 @@ const Create = ({ orgTimeSlots, orgId, organizations = null }) => {
                                 name="memberId"
                         />
                     </div>
+                    }
 
                     <div className="mb-4">
                         <label className="block font-medium mb-1">Email</label>
