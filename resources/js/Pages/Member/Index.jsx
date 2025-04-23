@@ -63,7 +63,8 @@ const Index = ({ members, filters, orgTimeSlots }) => {
 
                     {/* Action Links */}
                     <div className="flex gap-2 justify-center sm:justify-end">
-                        { user.role === 'admin' &&
+                        {
+                            user.role !== 'member' &&
                             <Link
                                 href={route('members.create')}
                                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center"
@@ -149,7 +150,7 @@ const Index = ({ members, filters, orgTimeSlots }) => {
                     <tr className="bg-gray-100">
                         <th className="p-2 border text-center">Name</th>
                         <th className="p-2 border text-center">Payment status</th>
-                        <th className="p-2 border text-center">Time slot</th>
+                        <th className="p-2 border text-center">{user.role === 'super_admin' ? 'Org name' : 'Time slot'}</th>
                         <th className="p-2 border text-center">Gender</th>
                         <th className="p-2 border text-center">Actions</th>
                     </tr>
@@ -162,7 +163,7 @@ const Index = ({ members, filters, orgTimeSlots }) => {
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">
-                                    {user.role === 'admin' || user.id === member.id ? (
+                                    {user.role !== 'member' || user.id === member.id ? (
                                         <Link href={route('payments', { search: member.id })}>
                                             <button className={`${member.has_paid_this_month ? 'bg-green-500' : 'bg-red-600'} text-white px-4 py-2 rounded`}>
                                                 {member.has_paid_this_month ? 'Paid' : 'UnPaid'}
@@ -179,7 +180,10 @@ const Index = ({ members, filters, orgTimeSlots }) => {
                                 </div>
                             </td>
                             <td className="p-2 border">
-                                <div className="flex justify-center items-center">{getTimeSlotLabel(member.time_slot)}</div>
+                                {user.role === 'super_admin' ?
+                                    <div className="flex justify-center items-center">{member.organization.name}</div>
+                                    : <div className="flex justify-center items-center">{getTimeSlotLabel(member.time_slot)}</div>
+                                }
                             </td>
                             <td className="p-2 border">
                                 <div className="flex justify-center items-center">{member.gender}</div>
@@ -187,12 +191,12 @@ const Index = ({ members, filters, orgTimeSlots }) => {
                             <td className="p-2 border space-x-2">
                                 <div className="flex justify-center items-center space-x-2">
 
-                                    {(user.role === 'admin' || user.id === member.id) &&
+                                    {(user.role !== 'member' || user.id === member.id) &&
                                         <Link href={route('members.edit', member.id)} className="text-blue-600 hover:underline">
                                             Edit
                                         </Link>
                                     }
-                                    {user.role === 'admin' &&
+                                    {user.role !== 'member' &&
                                         <button
                                             onClick={() => handleDelete(member.id)}
                                             className="text-red-600 hover:underline"

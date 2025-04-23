@@ -31,20 +31,21 @@ const Index = ({ organizations }) => {
                         {organizations.map((org) => (
                             <tr key={org.id}>
                                 <td className="p-2 border">
-                                    <div className="flex justify-center items-center">{org.name}</div>
+                                    <Link href={route('members.index', { search: org.name })} className="text-blue-600 hover:underline flex justify-center items-center">
+                                        {org.name}
+                                    </Link>
                                 </td>
                                 <td className="p-2 border">
                                     <div className="flex justify-center items-center">{org.member_count}</div>
                                 </td>
                                 <td className="p-2 border">
-                                    <Link href={route('admin.editTimeslots', { orgId: org.id })}>
+                                    <Link href={route('admin.editTimeslots', { orgId: org.id })} className="text-blue-600 hover:underline flex justify-center items-center">
                                         Edit
                                     </Link>
                                 </td>
 
                                 <td className="p-2 border space-x-2">
                                     <div className="flex justify-center items-center space-x-2">
-
                                         <Link
                                             href={route('members.create', { orgId: org.id })}
                                             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">

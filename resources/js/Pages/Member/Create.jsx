@@ -142,7 +142,7 @@ const Create = ({ orgTimeSlots, orgId, organizations = null }) => {
                         >
                             Create
                         </button>
-                        <Link href={route('members.index')} className="text-sm text-gray-600 hover:underline">
+                        <Link href={user.role === "admin" ? route('members.index') : route('admin.dashboard')} className="text-sm text-gray-600 hover:underline">
                             Cancel
                         </Link>
                     </div>

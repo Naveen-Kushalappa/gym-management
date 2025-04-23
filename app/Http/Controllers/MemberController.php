@@ -6,7 +6,6 @@
  use Carbon\Carbon;
  use Illuminate\Http\Request;
  use Illuminate\Support\Facades\Hash;
- use Illuminate\Support\Facades\Log;
  use Illuminate\Support\Facades\Redirect;
  use Inertia\Inertia;
 
@@ -20,11 +19,18 @@
         }
 
         $isAdminUser = $user->role == 'admin';
+        $isSuperAdmin = $user->role == 'super_admin';
 
-        $query = Member::with('payments')->with('timeSlot')
-            ->where('org_id', $user->org_id)->where('role', 'member');
+        $query = Member::with('payments')->with('organization')->with('timeSlot');
 
-        if(!$isAdminUser) {
+        //if user is not a super admin get only current org members having member role
+        if(!$isSuperAdmin){
+            $query->where('org_id', $user->org_id)->where('role', 'member');
+        }else{
+            $query->whereNot('role', 'super_admin');
+        }
+
+        if(!$isAdminUser && !$isSuperAdmin) {
             $query->where('org_time_slot_id', $user->org_time_slot_id)
                 ->orderByRaw("id = ? DESC", [$user->id]);
         }
@@ -37,6 +43,11 @@
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             });
+            if($isSuperAdmin){
+                $query->orWhereHas('organization', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
+            }
         }
         $month = (int)Carbon::now()->month;
         $year = Carbon::now()->year;
@@ -217,6 +228,5 @@
          }
 
          return Inertia::render('Member/Register', [ 'orgs' => $allOrgs, 'orgName' => $orgName ]);
-
      }
  }
