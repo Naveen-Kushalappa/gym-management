@@ -113,7 +113,7 @@
             'email' => 'required|email|unique:members',
             'gender' => 'required|in:Male,Female',
             'password' => 'required|string|min:6',
-            'orgTimeSlotId' => 'nullable|integer|exists:time_slots,id',
+            'orgTimeSlotId' => 'nullable|uuid|exists:org_time_slots,id',
         ]);
         $orgId =  $user->org_id ?: $request->orgId;
 
@@ -130,7 +130,7 @@
         if($user->role == 'super_admin') {
             $redirectRoute = 'admin.dashboard';
         }else{
-            $redirectRoute = 'member.index';
+            $redirectRoute = 'members.index';
         }
         return Redirect::route($redirectRoute)->with('success', 'Member created successfully.');
     }
@@ -145,7 +145,7 @@
             'email' => 'required|email|unique:members',
             'gender' => 'required|in:Male,Female',
             'password' => 'required|string|min:6|confirmed',
-            'orgTimeSlotId' => 'required|string',
+            'orgTimeSlotId' => 'nullable|uuid|exists:org_time_slots,id',
             'orgId' => 'required|uuid|exists:organizations,id',
         ]);
 
@@ -178,7 +178,7 @@
             'gender' => 'required|in:Male,Female',
             'email' => 'required|email|unique:members,email,' . $id,
             'password' => 'nullable|string|min:6|confirmed',
-            'orgTimeSlotId' => 'required|string',
+            'orgTimeSlotId' => 'nullable|uuid|exists:org_time_slots,id',
             'is_active' => 'required|in:0,1',
         ]);
 
