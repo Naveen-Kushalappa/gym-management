@@ -112,7 +112,7 @@ const Index = ({ members, filters, orgTimeSlots }) => {
                             <option value="">All timeslots</option>
                             {orgTimeSlots.map((timeSlot, i) => (
                                 <option key={i} value={timeSlot.id}>
-                                    {`${timeSlot.end_time} - ${timeSlot.start_time}`}
+                                    {`${timeSlot.start_time} - ${timeSlot.end_time}`}
                                 </option>
                             ))}
                         </select>
